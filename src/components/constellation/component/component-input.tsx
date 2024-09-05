@@ -1,97 +1,113 @@
-import { Box, Button, TextField } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
-import { contractInvoke } from "@soroban-react/contracts";
+import { Button, Stack, TextField } from "@mui/material";
 import { useSorobanReact } from "@soroban-react/core";
-import { scValToJs } from "../../../helpers/convert";
-import { xdr } from "@stellar/stellar-sdk";
-import { getName, getSymbol } from "../../../chain/contracts/token";
-import { Token } from "./type";
+import { getTokenName, getTokenSymbol } from "../../../chain/contracts/token";
+import { useContext, useState } from "react";
+import CreateConstellationContext from "../create/context/context";
+import { Address } from "@stellar/stellar-sdk";
 
+const ComponentInput = () => {
+  const sorobanContext = useSorobanReact();
+  const [address, setAddress] = useState("");
+  const [error, setError] = useState(false);
+  const { addToken, components } = useContext(CreateConstellationContext);
 
-interface Props {
-
-    onTokenInfo:(token: Token)=> void
-}
-const ComponentInput = ({onTokenInfo}: Props ) => {
-
-    const sorobanContext = useSorobanReact();
-
-    const handleTokenInfo = async () => {
-        console.log('--> token: token')
-       const address = 'CAFRU7ZYQFA3UG32YFZVBGN2PPMLCXEXJG45OF76ABREUSSPWNZBUFUJ'
-       const name = await  getName(address, sorobanContext)
-        
-       const symbol = await  getSymbol(address, sorobanContext)
-      console.log('name symbol ', name, symbol)
-       onTokenInfo({
-        name,
-        symbol,
-        address
-       })
-    
-    };
-
-    const handleAddress = (input:  string) => {
-       console.log('input ',input)
+  const handleTokenInfo = async () => {
+    if (
+      !address ||
+      (components.length > 0 &&
+        components.some((c) => c.address.toString() === address))
+    ) {
+      setError(true);
+      return;
     }
+    setError(false);
+    const name = await getTokenName(address, sorobanContext);
+    const symbol = await getTokenSymbol(address, sorobanContext);
+    addToken({
+      name,
+      symbol,
+      address: new Address(address),
+      amount: 0,
+      amountError: false,
+    });
+  };
 
-    return (
-        <>
-        <Box sx={{
-            display: 'flex',
-            alignContent: 'center',
-            gap: '2%',
-            justifyContent: 'center',
-        }}>
+  const handleAddress = (input: string) => {
+    console.log("input ", input);
+    setAddress(input);
+  };
+
+  return (
+    <>
+      <Stack
+        direction="row"
+        spacing={3}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
         <TextField
-           // name="text"
-           type="text"
-           id="outlined-basic"
-           label="Component Address"
-           variant="outlined"
-           required
-           value={name}
-           inputProps={{ readOnly: false }}
-           onChange={(e) => handleAddress(e.target.value)}
-           sx={{
-             width: "100%",
-             '& .MuiOutlinedInput-root': {
-                borderRadius: '14px', // Adjust border radius here
-               // height: '56px', // Adjust height as needed
-                fontWeight: 600, // Adjust font weight as needed
-              },
-              '& .MuiInputLabel-root': {
-                fontWeight: 600, // Adjust label font weight as needed
-              },
-            }}
-            InputProps={{
-             style: {
-              // height: '80px', // Adjust height as needed
-               fontWeight: 500, // Adjust font weight as needed
-            //    fontSize:'30px'
-             },
-             
-           }} 
-         />
-
-          <Button 
-          onClick={handleTokenInfo}
+          error={error}
+          type="text"
+          id="outlined-basic"
+          label="Token Address"
+          variant="outlined"
+          // required
+          value={address}
+          inputProps={{ readOnly: false }}
+          onChange={(e) => handleAddress(e.target.value)}
           sx={{
-            width:'8%',
-            height:'100%',
-            border: '1px solid', // Adds a border
-            borderColor: 'grey.300', // Color of the border
-            borderRadius: '5px', // Makes the button corners rounded
-            padding: '8px 16px', // Adds some padding
-            backgroundColor: 'background.paper', // Background color similar to a paper element
-            '&:hover': {
-              backgroundColor: 'grey.100', // Slightly darker on hover for effect
+            color: "#ffffff",
+            width: "85%",
+            "& .MuiInputBase-root": {
+              height: "100%",
+              fontSize: "14px",
+              color: "#ffffff",
+            },
+            "& .MuiInputBase-input": {
+              color: "#ffffff",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "silver",
+                color: "#ffffff",
+              },
+              "&.Mui-error fieldset": {
+                borderColor: "red",
+              },
             },
           }}
-          startIcon={<AddIcon/>}/>
-        </Box>
-        </>
-    )
-}
+          InputProps={{
+            style: {
+              fontWeight: 500,
+            },
+          }}
+        />
 
-export default ComponentInput
+        <Button
+          onClick={handleTokenInfo}
+          sx={{
+            width: "15%",
+            height: "100%",
+            border: "1px solid",
+            borderColor: "grey.300",
+            borderRadius: "5px",
+            padding: "15px 16px",
+            backgroundColor: "background.paper",
+            "&:hover": {
+              backgroundColor: "grey.100",
+            },
+          }}
+          // startIcon={<AddIcon />}
+        >
+          Add{" "}
+        </Button>
+      </Stack>
+    </>
+  );
+};
+
+export default ComponentInput;

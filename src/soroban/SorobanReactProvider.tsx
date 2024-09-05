@@ -41,7 +41,7 @@ export default function MySorobanReactProvider({
 
   return (
     <SorobanReactProvider
-    autoconnect={false}
+      autoconnect={false}
       chains={chains}
       connectors={walletConnectors}
       activeChain={activeChain}

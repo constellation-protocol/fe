@@ -6,14 +6,19 @@ const ConstellationLayout = () => {
     <>
       <Box
         sx={{
-          height: "75%",
-          bottom: "0",
+          bottom: "50px",
           width: "100%",
-          backgroundColor: "#F1F1F3",
           position: "absolute",
+          height: "100%",
+
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {/* <Box sx={{ height:'75%',bottom:'0', width:'100%', backgroundColor:'#F1F1F3', display:'flex'}}> */}
         <Outlet context={{}} />
       </Box>
     </>

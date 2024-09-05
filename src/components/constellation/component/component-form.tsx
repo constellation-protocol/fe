@@ -1,31 +1,100 @@
-import { Box, Card, Dialog,CardHeader,CardContent, DialogTitle, DialogContent } from "@mui/material"
-import ComponentInput from "./component-input"
-import ComponentItemsList from "./component-items-list"
-import { Token } from "./type";
-
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
+import ComponentInput from "./component-input";
+import ComponentItemsList from "./component-items-list";
+import { useContext } from "react";
+import CreateConstellationContext from "../create/context/context";
 
 export interface Props {
-    open: boolean;
-    components: Array<Token>;
-    onClose: () => void;
-    onTokenInfo:(token: Token) => void
-  }
-
-const ComponentForm = ({open,components,  onClose, onTokenInfo}:Props) => {
-
-   return(<Dialog fullWidth  onClose={() => onClose()} open={open}>
-        <DialogTitle sx={{margin:'0 auto'}}>Add Components to your token</DialogTitle>
-     
-           <DialogContent sx={{height:'40vh'}}>
-           <Box sx={{padding:'20px'}}>
-             <ComponentInput onTokenInfo={(token)=>onTokenInfo(token)}/>
-             </Box>
-           <Box sx={{padding:'10px 20px'}} >
-            <ComponentItemsList components={components}/>
-           </Box>
-           </DialogContent>
-     
-   </Dialog>)
+  open: boolean;
+  onClose: () => void;
 }
 
-export default ComponentForm
+const ComponentForm = ({ open, onClose }: Props) => {
+  const { components, setOpenComponentForm, setError } = useContext(
+    CreateConstellationContext,
+  );
+
+  const handleConfirm = () => {
+    let isInvalid = false;
+    components.forEach((component, index) => {
+      if (component.amount <= 0) {
+        setError(true, index);
+        isInvalid = true;
+      }
+    });
+
+    if (isInvalid) return;
+
+    setOpenComponentForm(false);
+  };
+
+  return (
+    <Dialog
+      fullWidth
+      /* onClose={() => onClose()}  */ open={open}
+      sx={{
+        "& .MuiDialog-paper": {
+          color: "silver",
+          width: "35%",
+          maxWidth: "80%",
+          border: "2px solid",
+          borderColor: "#291c44",
+          borderRadius: "25px",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          margin: "0 auto",
+          color: "silver",
+          backgroundColor: "#16181b",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        Components
+      </DialogTitle>
+      <Box sx={{ backgroundColor: "#16181b", padding: "0px 50px" }}>
+        <ComponentInput />
+      </Box>
+      <DialogContent sx={{ height: "40vh", backgroundColor: "#16181b" }}>
+        <Box sx={{ padding: "10px 24px" }}>
+          <ComponentItemsList />
+        </Box>
+      </DialogContent>
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          backgroundColor: "#16181b",
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            backgoundColor: "#16181b",
+            borderRadius: "10px",
+            padding: "10px 10px",
+            marginBottom: "10px",
+            width: "85%",
+            backgroundColor: "#7851D8",
+          }}
+          onClick={() => handleConfirm()}
+        >
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default ComponentForm;

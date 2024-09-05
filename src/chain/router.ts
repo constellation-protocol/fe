@@ -1,6 +1,6 @@
 import { contractInit } from "./rpc";
 
-const contractAddress = 'CA4FI3YVUE2UGPQVCDL7DDUDPQSKGHDXFIU54HBDJ5XJUMG2CE5GZA46'
+const contractAddress = 'CB44DLI3VEDYCBEZXUC7TKOH7PERPIOGY24DXGLQDO27JFENQPV6Z7T2'
 
 export async function get_factory_address(caller: string) {
    const result = await contractInit(caller, 'get_factory_address', [],contractAddress)

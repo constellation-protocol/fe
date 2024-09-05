@@ -12,6 +12,7 @@ export const useWallets=  () => {
     useEffect(() => {
         const _wallets = sorobanContext.connectors.map(async wallet => {
             const isDetected = await wallet.isConnected(); 
+        
             return {
                 
                 ...wallet, 

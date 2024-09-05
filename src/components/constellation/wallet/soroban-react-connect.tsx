@@ -5,16 +5,6 @@ import { ConnectButton } from "@soroban-react/connect-button";
 function SorobanReactConnectButton() {
   const sorobanContext = useSorobanReact();
 
-  //   const { address, connect } = sorobanContext
-
-  //   useEffect(() => {
-
-  //     if(!address) {
-  //         connect()
-  //     }
-
-  //   },[address])
-
   return (
     <div>
       <div>

@@ -6,18 +6,21 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import WalletButton from "../constellation/wallet/connect-wallet";
+import { NavLink } from "react-router-dom";
 
 const Nav = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         sx={{
-          padding: "0",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 ",
           margin: "0",
-          backgroundColor: "transparent",
           boxShadow: "none",
           width: "100%",
-          height: "10%",
+          height: "100px",
+          backgroundColor: "#0F1017",
         }}
       >
         <Container
@@ -30,11 +33,13 @@ const Nav = () => {
               padding: "0",
               display: "flex",
               position: "relative",
-              justifyContent: "center",
+              justifyContent: "space-around",
               alignItems: "center",
+              alignContent: "center",
+              paddingTop: "10px",
             }}
           >
-            <Box sx={{ position: "absolute", left: 40 }}>
+            <Box>
               <Link to="/">
                 <Typography>Logo</Typography>
               </Link>
@@ -44,32 +49,56 @@ const Nav = () => {
                 display: "flex",
                 textDecoration: "none",
                 gap: "20px",
-                alignItems: "space-between",
+                alignItems: "center",
                 justifyContent: "space-between",
                 flexDirection: "flex-start",
+                backgroundColor: "#181A25",
+                padding: "6px 20px",
+                borderRadius: "35px",
               }}
             >
-              <Link to="/create" style={{ textDecoration: "none" }}>
+              <NavLink
+                to="/create"
+                style={({ isActive }) => ({
+                  textDecoration: "none",
+                  color: "white",
+                  backgroundColor: isActive ? "#8865DD" : "transparent",
+                  padding: "6px 20px",
+                  borderRadius: "35px",
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
+              >
                 <Typography>Create Index</Typography>
-              </Link>
-              <Link to="/products" style={{ textDecoration: "none" }}>
+              </NavLink>
+              <NavLink
+                to="/products"
+                style={({ isActive }) => ({
+                  textDecoration: "none",
+                  color: "white",
+                  backgroundColor: isActive ? "#8865DD" : "transparent",
+                  padding: "6px 20px",
+                  borderRadius: "35px",
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
+              >
                 <Typography>Products</Typography>
-              </Link>
-              <Link to="/mint" style={{ textDecoration: "none" }}>
-                <Typography>Mint</Typography>
-              </Link>
-              <Link to="/rebalance" style={{ textDecoration: "none" }}>
-                <Typography>Rebalance</Typography>
-              </Link>
-              <Link to="/redeem" style={{ textDecoration: "none" }}>
-                <Typography>Redeem</Typography>
-              </Link>
-              <Link to="/registry" style={{ textDecoration: "none" }}>
-                <Typography>Registry</Typography>
-              </Link>
-              <Box>
-                <WalletButton />
-              </Box>
+              </NavLink>
+              <NavLink
+                to="/swap"
+                style={({ isActive }) => ({
+                  textDecoration: "none",
+                  color: "white",
+                  backgroundColor: isActive ? "#8865DD" : "transparent",
+                  padding: "6px 20px",
+                  borderRadius: "35px",
+                  fontWeight: isActive ? "bold" : "normal",
+                })}
+              >
+                <Typography>Swap</Typography>
+              </NavLink>
+            </Box>
+            <Box>
+              <WalletButton />
             </Box>
           </Toolbar>
         </Container>
