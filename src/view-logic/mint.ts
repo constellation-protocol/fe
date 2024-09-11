@@ -50,5 +50,18 @@ export const getConstellationAmount= async (amount_in: number,token_in: string,t
     return constellation_amount
 
 }
+
+export const getXlmAmount= async (amount_in: number,token_in: string,token_in_decimals: number,  components: Array<Component>, sorobanContext: SorobanContextType): Promise<number> => {
+
+    let total_components_price = await getUnitConstellationAmountIn(token_in,token_in_decimals, components, sorobanContext);
+
+    const constellation_amount = amount_in * total_components_price
+
+    console.log('-> constellation_amount ',constellation_amount)
+ 
+    return constellation_amount / Math.pow(10, token_in_decimals)
+
+}
+ 
  
  

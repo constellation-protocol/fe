@@ -25,6 +25,14 @@ export interface MintParams {
     deadline: number
 }
 
+export interface RedeemParams {
+    to: Address, 
+    amount: number, 
+    constellation_token: Address,
+    redeem_token: Address,
+    deadline: number
+}
+
 export interface Token {
     name: string;
     symbol: string;

@@ -78,6 +78,23 @@ export const getTokenSymbol = async (address: string, sorobanContext: SorobanCon
    return balance
   };
 
+  export const getAllowance = async (from: string, spender: string, contractAddress: string, sorobanContext: SorobanContextType) => {
+    const _from = nativeToScVal(from, {type:'address'});
+    const _spender = nativeToScVal(spender, {type:'address'});
+
+    let response = await contractInvoke({
+      contractAddress: contractAddress,
+      method: "allowance",
+      args:[_from,_spender ],
+      sorobanContext,
+      signAndSend: false,
+    });
+
+   const allownce = scValToJs(response as xdr.ScVal) as number;
+   return allownce
+  }
+
+
   export const getTokenUserBalance = async (account: string, tokenAddress: Address, sorobanContext: SorobanContextType): Promise<TokenUserBalance> => {
  
         const _name = await  getTokenName(tokenAddress.toString() ,  sorobanContext);
@@ -105,6 +122,7 @@ export const getTokenSymbol = async (address: string, sorobanContext: SorobanCon
             balanceLoaded
         } 
   };
+
 
 
   export const getTokenUserBalanceList = async (account: string, contractAddress: Array<Address>, sorobanContext: SorobanContextType): Promise<Array<TokenUserBalance>> => {

@@ -1,4 +1,11 @@
-import { Card, CardContent, CardHeader, Tab } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Tab,
+  Typography,
+} from "@mui/material";
 import { TabList, TabPanel, TabContext } from "@mui/lab";
 import { useEffect, useState } from "react";
 import Mint from "./mint";
@@ -8,10 +15,21 @@ import { useSorobanReact } from "@soroban-react/core";
 import { getTokenUserBalanceList } from "../../../chain/contracts/token";
 import { Address } from "@stellar/stellar-sdk";
 import { ConstellationUserBalance, TokenUserBalance } from "../../../types";
-import { getConstellationComponents, getUserConstellationDetails } from "../../../chain/contracts/constellation_token";
+import {
+  getConstellationComponents,
+  getUserConstellationDetails,
+} from "../../../chain/contracts/constellation_token";
 
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+
+enum View {
+  mint,
+  redeem,
+}
 const Swap = () => {
   const [activeTab, setActiveTab] = useState("1");
+  const [view, setView] = useState<View>(View.mint);
+
   const [constellationTokens, setConstellationTokens] = useState<
     Array<ConstellationUserBalance>
   >([]);
@@ -21,11 +39,9 @@ const Swap = () => {
   const sorobanContext = useSorobanReact();
   useEffect(() => {
     const get = async () => {
-
-
       const address = sorobanContext.address;
-       // getUserConstellationDetails
-      const constellationTokens = await getUserConstellationDetails( //getConstellationUserBalance(
+      const constellationTokens = await getUserConstellationDetails(
+        //getConstellationUserBalance(
         address as string,
         sorobanContext,
       );
@@ -36,10 +52,31 @@ const Swap = () => {
         sorobanContext,
       );
       setConstellationTokens(constellationTokens);
-      setPaymentTokens(paymentTokens); 
+      setPaymentTokens(paymentTokens);
     };
     get();
   }, [sorobanContext.address]);
+
+  const getView = () => {
+    if (view === View.mint) {
+      return (
+        <Mint
+          switchView={() => setView(View.redeem)}
+          paymentTokens={paymentTokens}
+          constellationTokens={constellationTokens}
+        />
+      );
+    }
+    {
+      return (
+        <Redeem
+          switchView={() => setView(View.mint)}
+          paymentTokens={paymentTokens}
+          constellationTokens={constellationTokens}
+        />
+      );
+    }
+  };
   return (
     <>
       <Card
@@ -54,26 +91,10 @@ const Swap = () => {
           paddingBottom: "20px",
         }}
       >
-        <CardHeader></CardHeader>
-        <CardContent>
-          <TabContext value={activeTab}>
-            <TabList onChange={(e, val) => setActiveTab(val)}>
-              <Tab label="Mint" value="1" />
-              <Tab label="Redeem" value="2" />
-            </TabList>
-            <TabPanel value="1">
-              <Mint
-                paymentTokens={paymentTokens}
-                constellationTokens={constellationTokens}
-              />
-            </TabPanel>
-            <TabPanel value="2">
-              <Redeem
-                paymentTokens={paymentTokens}
-                constellationTokens={constellationTokens}
-              />
-            </TabPanel>
-          </TabContext>
+        <CardHeader title="Swap"></CardHeader>
+        <CardContent sx={{ position: "relative" }}>
+          {/* <Chip sx={{position:'absolute',right:'180px'}} avatar={<UnfoldMoreIcon>M</UnfoldMoreIcon>} label="Avatar" /> */}
+          {getView()}
         </CardContent>
       </Card>
     </>
@@ -84,4 +105,24 @@ export default Swap;
 
 /**
  *  -1,2,3
+ * 
+ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+
+import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
+
+import SwapVertIcon from '@mui/icons-material/SwapVert';
+
+import SyncIcon from '@mui/icons-material/Sync';
+
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
+
+import ImportExportIcon from '@mui/icons-material/ImportExport';
+
+import HeightIcon from '@mui/icons-material/Height';
+
+import SouthIcon from '@mui/icons-material/South';
+
  */

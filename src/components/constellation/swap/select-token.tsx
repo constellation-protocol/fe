@@ -10,12 +10,13 @@ const SelectToken = ({ onClick, symbol }: Props) => {
     <Box onClick={() => onClick()}>
       <Chip
         sx={{
+          color:'silver',
           cursor: "pointer",
-          backgroundColor: "#fff",
+          backgroundColor: "#212637",//"#fff",
           padding: "0 15px",
           flexDirection: "row-reverse",
         }}
-        icon={<ExpandMoreIcon />}
+        icon={<ExpandMoreIcon sx={{color:'white'}} />}
         label={symbol || "Select Token"}
       />
     </Box>

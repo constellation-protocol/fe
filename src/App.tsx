@@ -9,14 +9,18 @@ import ConstellationLayout from "./components/constellation/layout";
 import CreateTokenIndex from "./components/constellation/create";
 import ConstellationDetails from "./components/constellation/details/constellation-details";
 import Swap from "./components/constellation/swap/swap";
+import AstroSvg from "./components/common/astro";
+import Index from "./components/constellation";
 
 function App() {
   return (
     <>
       <>hello</>
+
       <Nav />
       <Routes>
         <Route element={<ConstellationLayout />}>
+          <Route path="/" element={<Index />} />
           <Route path="/create" element={<CreateTokenIndex />} />
           <Route path="/products" element={<ListToken />} />
           <Route path="/products/:id" element={<ConstellationDetails />} />

@@ -12,7 +12,7 @@ const CreateConstellationContextProvider = ({
 
   const removeToken = (index: number) => {
     components.splice(index, 1);
-    console.log("components removed ", components);
+
     setTokens([...components]);
   };
 

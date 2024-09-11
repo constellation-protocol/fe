@@ -10,7 +10,6 @@ const ConstellationLayout = () => {
           width: "100%",
           position: "absolute",
           height: "100%",
-
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",

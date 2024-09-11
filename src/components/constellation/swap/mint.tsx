@@ -1,70 +1,90 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
 import TokenInfo from "./token-info";
-import { Component, ConstellationUserBalance, MintParams, TokenUserBalance } from "../../../types";
+import {
+  Component,
+  ConstellationUserBalance,
+  MintParams,
+  TokenUserBalance,
+} from "../../../types";
 import { useEffect, useState } from "react";
-import { mint } from "../../../chain/contracts/router";
+import {
+  mint,
+  routerXlmGetAllowance,
+} from "../../../chain/contracts/router";
 import { Address } from "@stellar/stellar-sdk";
 import { useSorobanReact } from "@soroban-react/core";
-import { xlmApproveRouter } from "../../../chain/contracts/xlm";
 import { approve } from "../../../chain/contracts/token";
 import { getConstellationAmount } from "../../../view-logic/mint";
-import { formatNumber, getScaledAmount, getSwapFeeIncludedAmount } from "../../../utils";
+import {
+  formatNumber,
+  getScaledAmount,
+  getSwapFeeIncludedAmount,
+} from "../../../utils";
+import MintAction from "./mint-action";
+import { xlmGetBalance } from "../../../chain/contracts/xlm";
+import SwapContent from "./swap-content";
 
 interface Props {
   paymentTokens: Array<TokenUserBalance>;
   constellationTokens: Array<ConstellationUserBalance>;
+  switchView: () => void;
 }
 
-const Mint = ({ paymentTokens, constellationTokens }: Props) => {
+const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
   const sorobanContext = useSorobanReact();
+  const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
   const [constellationToken, setConstellationToken] =
     useState<ConstellationUserBalance>();
+  const [paymentAmount, setPaymentAmount] = useState<Number | string>("");
+  const [constellationAmount, setConstellationAmount] = useState<
+    Number | string
+  >("");
 
-  const [paymentAmount, setPaymentAmount] = useState<Number | string>('');
-  const [constellationAmount, setConstellationAmount] = useState<Number | string>(''); 
+  const [balance, setBalance] = useState<number>(0);
+  const [allowance, setAllowance] = useState<number>(0);
+  const [accountAddress, setAccountAddress] = useState<string>("");
 
   useEffect(() => {
-  
-  }, [paymentToken, constellationToken, paymentAmount, constellationAmount]);
+    const run = async () => {
+      if (address) {
+        setAccountAddress(address);
+        const _balance = await xlmGetBalance(address, sorobanContext);
+        const _allowance = await routerXlmGetAllowance(address, sorobanContext);
+        setBalance(_balance);
+        setAllowance(_allowance);
+      }
 
- 
+      if(!!paymentAmount) {
+        _updateReceiveTokenAmount(paymentAmount);
+      }
+    };
+    run();
+  }, [
+    paymentAmount,
+    constellationAmount,
+    paymentToken,
+    constellationToken,
+    address,
+  ]);
 
   const approveTx = async () => {
     const decimals = paymentToken?.decimals as number;
     let amount_in = getSwapFeeIncludedAmount(paymentAmount as number);
-     amount_in = getScaledAmount(amount_in, decimals);
-
-    console.log('cscaled ->> ',amount_in)
-
+    amount_in = getScaledAmount(amount_in, decimals);
     const xlm = import.meta.env.VITE_XLM as string;
-    const constellation_router_str = import.meta.env
-      .VITE_CONSTELLATION_ROUTER as string;
+    const constellation_router_str = import.meta.env.VITE_CONSTELLATION_ROUTER as string;
     const constellation_router = Address.fromString(constellation_router_str);
     const from = Address.fromString(sorobanContext?.address as string);
-    const result = approve(
-      xlm,
-      from,
-      constellation_router,
-      amount_in,
+    await approve(xlm, from, constellation_router, amount_in, sorobanContext);
+    const allowance = await routerXlmGetAllowance(
+      accountAddress,
       sorobanContext,
     );
+    setAllowance(allowance);
   };
 
   const swap = async () => {
     if (!sorobanContext.address) {
-      console.log("errorr context");
       return;
     }
 
@@ -76,17 +96,12 @@ const Mint = ({ paymentTokens, constellationTokens }: Props) => {
     const to = sorobanContext?.address as string;
 
     let amount = getSwapFeeIncludedAmount(paymentAmount as number);
-    const amount_in = getScaledAmount(
-      amount,
-      paymentToken?.decimals as number,
-    )
-
-    console.log('constellationAmount ->> ',constellationAmount)
+    const amount_in = getScaledAmount(amount, paymentToken?.decimals as number);
 
     const mint_amount = getScaledAmount(
-          constellationAmount as number,
-          constellationToken?.decimals as number)
-    console.log('mint_amount ', mint_amount)
+      constellationAmount as number,
+      constellationToken?.decimals as number,
+    );
 
     const mintParams: MintParams = {
       amount_in,
@@ -97,76 +112,97 @@ const Mint = ({ paymentTokens, constellationTokens }: Props) => {
       deadline: timestampPlusFiveHours,
     };
 
-    console.log("minting ...");
-   await mint(mintParams, sorobanContext);
+    await mint(mintParams, sorobanContext);
   };
 
-  const handleAmountChange= async (amount: Number | string) => {
+  const handleAmountChange = async (amount: Number | string) => {
+   
+    if (isNaN(amount as number)) {
+      setConstellationAmount("");
+      setPaymentAmount("");
+      return;
+    }
 
-    console.log(' ->> constellationToken ->>',constellationToken ) 
-    const token_in = paymentToken?.address.toString() as string ;  
-    const decimals = paymentToken?.decimals as number
-    const amount_in = amount as number * Math.pow(10,decimals);
-  
-   if (isNaN(amount as number)) {
-    setConstellationAmount('')
-    setPaymentAmount('');
-     return 
-   }
-  
-   setPaymentAmount(amount);
- 
+    setPaymentAmount(amount);
+    _updateReceiveTokenAmount(amount);
+  };
+
+  const handleSetConstellationToken = (t: TokenUserBalance) => {
+    setConstellationToken(
+      constellationTokens.find((c) => c.address === t.address),
+    ); 
+  };
+
+  const handleSetPaymentToken = (token: TokenUserBalance) => {
+    setPaymentToken(token );
+  }
+
+  const _updateReceiveTokenAmount = async (amount: Number | string) => {
+    const token_in = paymentToken?.address.toString() as string;
+    const decimals = paymentToken?.decimals as number;
+    const amount_in = (amount as number) * Math.pow(10, decimals);
+
+    if(!constellationToken || !paymentToken) return;
+
     const amountOut = await getConstellationAmount(
       amount_in,
       token_in,
       decimals,
       constellationToken?.components as Array<Component>,
-      sorobanContext
-    )  
-    
-    setConstellationAmount(parseFloat(formatNumber(amountOut, 3)));
-  }
+      sorobanContext,
+    );
 
-  const handleSetConstellationToken = (t : TokenUserBalance) => {
-        setConstellationToken(constellationTokens.find(c => c.address === t.address));
-  }
+    setConstellationAmount(parseFloat(formatNumber(amountOut, 3)));
+  };
 
   return (
     <>
-      <Container>
-        <Stack direction={"column"} sx={{ gap: "14px" }}>
-          <TokenInfo
-            amount={paymentAmount as number}
-            onAmountChange={handleAmountChange}
-            selectedToken={paymentToken}
-            setSelectedToken={setPaymentToken}
-            tokens={paymentTokens}
-            label="Sell"
-            showSelect={true}
-          />
+      <SwapContent switchView={switchView}>
+        <TokenInfo
+        isTokenIn={true}
+          amount={paymentAmount as number}
+          readOnly = {false}
+          onAmountChange={handleAmountChange}
+          selectedToken={paymentToken}
+          setSelectedToken={handleSetPaymentToken}
+          tokens={paymentTokens}
+          label="Sell"
+          showSelect={true}
+        />
 
-          <TokenInfo
-            amount={constellationAmount as number}
-            onAmountChange={setConstellationAmount}
-            selectedToken={constellationToken}
-            setSelectedToken={handleSetConstellationToken}
-            tokens={constellationTokens}
-            label="Buy"
-            showSelect={true}
-          />
-          <Box>
-            <Button variant="contained" fullWidth onClick={swap}>
-              Swap
-            </Button>
-
-            <Button variant="contained" fullWidth onClick={approveTx}>
-              Approve
-            </Button>
-          </Box>
-        </Stack>
-      </Container>
+        <TokenInfo
+         isTokenIn={false}
+          amount={constellationAmount as number}
+          readOnly = {true}
+          onAmountChange={setConstellationAmount}
+          selectedToken={constellationToken}
+          setSelectedToken={handleSetConstellationToken}
+          tokens={constellationTokens}
+          label="Buy"
+          showSelect={true}
+        />
+        <MintAction
+          address={accountAddress}
+          paymentAmount={getScaledAmount(
+            paymentAmount as number,
+            paymentToken?.decimals as number,
+          )}
+          balance={balance}
+          allowance={allowance}
+          inputTokenSelected={!!paymentToken}
+          outputTokenSelected={!!constellationToken}
+          swap={swap}
+          approve={approveTx}
+        />
+      </SwapContent>
     </>
   );
 };
 
 export default Mint;
+
+// connect wallet
+// select input token
+// select output token
+// approve
+// swap

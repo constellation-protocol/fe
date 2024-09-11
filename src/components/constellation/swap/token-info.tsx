@@ -1,13 +1,14 @@
 import { Box, InputAdornment, TextField } from "@mui/material";
 import SelectToken from "./select-token";
 import SelectTokenDialog from "./select-token-dialog";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { TokenUserBalance } from "../../../types";
-import { parse } from "path";
 
 interface Props {
   label: String;
   showSelect: boolean;
+  isTokenIn: boolean;
+  readOnly: boolean;
   amount: Number | undefined;
   tokens: Array<TokenUserBalance>;
   onAmountChange: (amount: number) => void;
@@ -19,25 +20,25 @@ const TokenInfo = ({
   label,
   showSelect,
   amount,
+  readOnly,
   tokens,
+  isTokenIn,
   onAmountChange,
   selectedToken,
   setSelectedToken,
 }: Props) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-
   return (
     <>
-      <Box>
-        <TextField
-        onWheel={event => { event.preventDefault(); }} 
+      <Box sx={{ width: "100%" }}>
+        <TextField 
           type="number"
           value={amount}
-          placeholder="0" 
-          onChange={ (e) => onAmountChange(parseFloat(e.target.value))}
+          placeholder="0"
+          onChange={(e) => onAmountChange(parseFloat(e.target.value))}
           InputProps={{
-         
+            readOnly: readOnly,
             startAdornment: showSelect && (
               <InputAdornment position="start">
                 <Box>
@@ -55,8 +56,8 @@ const TokenInfo = ({
               </InputAdornment>
             ),
             inputProps: {
-              step:0.01,
-              min: 0 ,
+              step: 0.01,
+              min: 0,
               style: {
                 textAlign: "right", // Align the text to the far right
                 paddingRight: "40px",
@@ -67,37 +68,42 @@ const TokenInfo = ({
           variant="outlined"
           fullWidth
           sx={{
+            width: "100%",
             "& .MuiInputBase-input": {
-              color: "#fff",
+              color: "silver",
               fontSize: "2.25rem", // Increase the text size in the TextField
               padding: "30px 14px", // Adjust padding to maintain text alignment
-              overflow: 'hidden', // Hide scroll bar
+              overflow: "hidden", // Hide scroll bar
             },
             "& .MuiInputLabel-root": {
-              color: "#fff", // Set the label color to white
+              color: "silver", // Set the label color to white
             },
+          
             "& .MuiOutlinedInput-root": {
-              borderRadius: "20px", // Set the border radius of the TextField to 10px
-              overflow: 'hidden', // Hide scroll bar
-              resize: 'none',      // Prevents resizing
+              borderRadius: "20px", // Set the border radius of the TextField
+              overflow: "hidden", // Hide scroll bar
+              resize: "none", // Prevents resizing
             },
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "silver", // Keep the border color white on hover
+              borderColor: "silver", // Default border color (unfocused)
             },
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "silver", // Keep the border color white on hover
+              borderColor: "silver", // Keep border color silver on hover
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "silver", // Keep the border color white when focused
+              borderColor: "#4caf50 !important", // Change the border color when focused (green)
             },
-            '& input[type=number]': {
-              MozAppearance: 'textfield', // For Firefox
+            "&:not(.Mui-focused) .MuiOutlinedInput-notchedOutline": {
+              borderColor: isTokenIn ? "#B4EFAF": "black", // Ensure border color stays silver when not focused
+            }, 
+            "& input[type=number]": {
+              MozAppearance: "textfield", // For Firefox
             },
-            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none', // For Chrome, Safari, Edge
-              margin: 0,
-            },
-            
+            "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
+              {
+                WebkitAppearance: "none", // For Chrome, Safari, Edge
+                margin: 0,
+              },
           }}
         />
       </Box>

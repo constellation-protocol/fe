@@ -50,27 +50,3 @@ export default function MySorobanReactProvider({
     </SorobanReactProvider>
   );
 }
-
-// export default function MySorobanReactProvider({
-//   children
-//   // ...rest
-// }: {
-//   children: React.ReactNode;
-//   [x: string]: any;
-// }) {
-//   // const mounted = useMounted();
-
-//   // if (!mounted) return null;
-
-//   return (
-//     <SorobanReactProvider
-//       chains={chains}
-//       appName={'Soroswap'}
-//       connectors={walletConnectors}
-//       activeChain={activeChain}
-//       // {...rest}
-//     >
-//       {children}
-//     </SorobanReactProvider>
-//   );
-// }
