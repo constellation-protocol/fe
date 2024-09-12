@@ -4,7 +4,8 @@ import SelectedWallet from "./select-wallet";
 import { formatAddress } from "../../../utils";
 import { useSorobanReact } from "@soroban-react/core";
 
-const WalletButton = () => {
+
+const WalletButton = (  ) => {
   const [open, setOpen] = useState(false);
   const [, setKey] = useState("");
   const sorobanContext = useSorobanReact();

@@ -1,9 +1,9 @@
 import { Box, LinearProgress, Stack, TextField } from "@mui/material";
 import { useSorobanReact } from "@soroban-react/core";
 import { getTokenName, getTokenSymbol } from "../../../chain/contracts/token";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CreateConstellationContext from "../create/context/context";
-import { Address } from "@stellar/stellar-sdk";
+import { Address, StrKey } from "@stellar/stellar-sdk";
 
 const ComponentInput = () => {
   const sorobanContext = useSorobanReact();
@@ -11,6 +11,10 @@ const ComponentInput = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { addToken, components } = useContext(CreateConstellationContext);
+
+  useEffect(() => {
+      
+  })
 
   const handleTokenInfo = async (address: string) => {
     if (
@@ -37,9 +41,18 @@ const ComponentInput = () => {
   }; 
 
   const handleAddress = (input: string) => {
+     const _input = input.trim();
+      setAddress(_input);
+      if(_input==='') {
+        setError(false)
+      }
+     if(StrKey.isValidContract(_input)) {
+      setError(false)
+      handleTokenInfo(input)
+     } else  {
+       setError(true)
+     } 
  
-    setAddress(input);
-    handleTokenInfo(input)
   };
 
   return (
@@ -56,7 +69,6 @@ const ComponentInput = () => {
       >
         <Box sx={{ position: "relative", width: "100%", padding:'0' }}> 
         <TextField
-        //  onChange={handleTokenInfo}
           error={error}
           type="text"
           id="outlined-basic"
@@ -67,6 +79,7 @@ const ComponentInput = () => {
           inputProps={{ readOnly: false }}
           onChange={(e) => handleAddress(e.target.value)}
           sx={{
+            borderColor:"none",
             color: "#ffffff",
             width: "100%",
             borderRadius: "14px",
@@ -85,7 +98,7 @@ const ComponentInput = () => {
                 color: "#ffffff",
               },
               "&.Mui-error fieldset": {
-                borderColor: "pink",
+                borderColor: error ?  "#B22222" : "none",
               },
             }, 
           }}

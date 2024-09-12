@@ -36,7 +36,7 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
-  const [swapStatus, setSwapStatus] = useState<SwapStatus>();
+  const [swapStatus, setSwapStatus] = useState<SwapStatus>();//(SwapStatus.init);
   const [constellationToken, setConstellationToken] =
     useState<ConstellationUserBalance>();
   const [paymentAmount, setPaymentAmount] = useState<Number | string>("");
