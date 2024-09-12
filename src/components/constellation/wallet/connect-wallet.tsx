@@ -27,7 +27,7 @@ const WalletButton = () => {
       <Button
         variant="contained"
         onClick={handleClick}
-        sx={{ backgroundColor: "#8865DD", borderRadius: "15px" }}
+        sx={{ backgroundColor: "#8865DD", borderRadius: "15px", fontFamily:'NeueHaasLight' }}
       >
         {!!sorobanContext.address
           ? formatAddress(sorobanContext.address)

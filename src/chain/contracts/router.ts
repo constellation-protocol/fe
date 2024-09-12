@@ -21,11 +21,8 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
       sorobanContext,
       signAndSend: true,
       args:[_decimal, _name, _symbol,_manager, _components, _amounts ],
-  
     });
- 
-     console.log('my result ->> ', response)
- 
+  
   };
   
 
@@ -56,8 +53,6 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
     const _constellation_token_id = nativeToScVal(constellation_token, {type:'address'});
     const _to = nativeToScVal(to, {type:'address'});
     const _deadline = nativeToScVal(deadline,{type:'u64'});
-
-
     let response = await contractInvoke({
       contractAddress: contractAddress,
       method: "redeem_into",
@@ -66,7 +61,7 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
       args:[_to, _amount,  _constellation_token_id, _redeem_token, _deadline ],
   
     });
-     console.log('-> redeem response ', response)
+ 
   };
 
   export const routerGetAllowance = async (from: string, token: string, sorobanContext: SorobanContextType): Promise<number> => {

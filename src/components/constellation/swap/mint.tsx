@@ -22,6 +22,7 @@ import {
 import MintAction from "./mint-action";
 import { xlmGetBalance } from "../../../chain/contracts/xlm";
 import SwapContent from "./swap-content";
+import { SwapStatus } from "./common";
 
 interface Props {
   paymentTokens: Array<TokenUserBalance>;
@@ -33,6 +34,7 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
+  const [swapStatus, setSwapStatus] = useState<SwapStatus>();
   const [constellationToken, setConstellationToken] =
     useState<ConstellationUserBalance>();
   const [paymentAmount, setPaymentAmount] = useState<Number | string>("");
@@ -50,12 +52,14 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
         setAccountAddress(address);
         const _balance = await xlmGetBalance(address, sorobanContext);
         const _allowance = await routerXlmGetAllowance(address, sorobanContext);
-        setBalance(_balance);
         setAllowance(_allowance);
+        setBalance(_balance);
+        setSwapStatus(SwapStatus.completed)
+
       }
 
-      if(!!paymentAmount) {
-        _updateReceiveTokenAmount(paymentAmount);
+      if(!!paymentAmount && swapStatus === SwapStatus.init) {
+         _updateReceiveTokenAmount(paymentAmount);
       }
     };
     run();
@@ -75,12 +79,9 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
     const constellation_router_str = import.meta.env.VITE_CONSTELLATION_ROUTER as string;
     const constellation_router = Address.fromString(constellation_router_str);
     const from = Address.fromString(sorobanContext?.address as string);
+    setSwapStatus(SwapStatus.approving)
     await approve(xlm, from, constellation_router, amount_in, sorobanContext);
-    const allowance = await routerXlmGetAllowance(
-      accountAddress,
-      sorobanContext,
-    );
-    setAllowance(allowance);
+    setSwapStatus(SwapStatus.approve_completing)
   };
 
   const swap = async () => {
@@ -111,12 +112,15 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
       to: Address.fromString(to),
       deadline: timestampPlusFiveHours,
     };
-
+    setSwapStatus(SwapStatus.swapping)
     await mint(mintParams, sorobanContext);
+    setPaymentAmount(0)
+    setConstellationAmount(0)
+    setSwapStatus(SwapStatus.swap_completing)
   };
 
-  const handleAmountChange = async (amount: Number | string) => {
-   
+  const handlePaymentAmountChange = async (amount: Number | string) => {
+    setSwapStatus(SwapStatus.init)
     if (isNaN(amount as number)) {
       setConstellationAmount("");
       setPaymentAmount("");
@@ -127,10 +131,17 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
     _updateReceiveTokenAmount(amount);
   };
 
+  const handleReciveAmountChange = (amount: string | Number) => {
+    setConstellationAmount(amount)
+
+  }
+
   const handleSetConstellationToken = (t: TokenUserBalance) => {
     setConstellationToken(
       constellationTokens.find((c) => c.address === t.address),
     ); 
+
+    _updateReceiveTokenAmount(paymentAmount);
   };
 
   const handleSetPaymentToken = (token: TokenUserBalance) => {
@@ -162,7 +173,7 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
         isTokenIn={true}
           amount={paymentAmount as number}
           readOnly = {false}
-          onAmountChange={handleAmountChange}
+          onAmountChange={handlePaymentAmountChange}
           selectedToken={paymentToken}
           setSelectedToken={handleSetPaymentToken}
           tokens={paymentTokens}
@@ -174,7 +185,7 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
          isTokenIn={false}
           amount={constellationAmount as number}
           readOnly = {true}
-          onAmountChange={setConstellationAmount}
+          onAmountChange={handleReciveAmountChange}
           selectedToken={constellationToken}
           setSelectedToken={handleSetConstellationToken}
           tokens={constellationTokens}
@@ -193,16 +204,11 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
           outputTokenSelected={!!constellationToken}
           swap={swap}
           approve={approveTx}
+          swapStatus={swapStatus as SwapStatus}
         />
       </SwapContent>
     </>
   );
 };
 
-export default Mint;
-
-// connect wallet
-// select input token
-// select output token
-// approve
-// swap
+export default Mint; 

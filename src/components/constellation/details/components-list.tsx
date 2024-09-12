@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   Paper,
+  Popover,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Component } from "../../../types";
 import { formatAddress } from "../../../utils";
@@ -17,8 +19,24 @@ import { formatAddress } from "../../../utils";
 interface Props {
   tokens: Array<Component>;
 }
-const ComponentsList = ({ tokens }: Props) => (
-  <>
+const ComponentsList = ({ tokens }: Props) => {
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLSpanElement | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState('');
+
+  const handleClick = (event: React.MouseEvent<HTMLSpanElement>, address: string) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedAddress(address)
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  return(<>
     <Card
       sx={{
         backgroundColor: "#13141E",
@@ -34,6 +52,7 @@ const ComponentsList = ({ tokens }: Props) => (
             justifyContent: "center",
             fontSize: "16px",
             color: "#fff",
+            fontFamily:'NeueHaasLight'
           },
           "& .MuiCardHeader-subheader": {
             fontSize: "0.875rem", // Adjust the subheader font size here
@@ -55,8 +74,8 @@ const ComponentsList = ({ tokens }: Props) => (
           >
             <TableHead>
               <TableRow sx={{ color: "white" }}>
-                <TableCell sx={{ color: "white" }}>Component</TableCell>
-                <TableCell>Address</TableCell>
+                <TableCell sx={{ color: "white" }}><Typography sx={{fontFamily:'NeueHaasLight'}}>Component</Typography></TableCell>
+                <TableCell><Typography sx={{fontFamily:'NeueHaasLight'}}>Address</Typography></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -64,9 +83,9 @@ const ComponentsList = ({ tokens }: Props) => (
                 return (
                   <React.Fragment key={i}>
                     <TableRow>
-                      <TableCell>{token.symbol}</TableCell>
+                      <TableCell><Typography sx={{fontFamily:'NeueHaasLight'}}>{token.symbol}</Typography></TableCell>
                       <TableCell>
-                        {formatAddress(token.address.toString())}
+                        <Typography sx={{fontFamily:'NeueHaasLight'}} onClick={(e)=>handleClick(e,token.address.toString())}>{formatAddress(token.address.toString())}</Typography>
                       </TableCell>
                     </TableRow>
                   </React.Fragment>
@@ -77,7 +96,28 @@ const ComponentsList = ({ tokens }: Props) => (
         </TableContainer>
       </CardContent>
     </Card>
-  </>
-);
+
+    <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#824F87',
+            borderRadius: '10px',
+            color: '#FFFFFF',
+            
+          }
+        }}
+      >
+        <Typography sx={{ p: 2, borderRadius:'24px',   fontFamily:'NeueHaasLight'}}>{selectedAddress}</Typography>
+      </Popover>
+  </>)
+};
 
 export default ComponentsList;

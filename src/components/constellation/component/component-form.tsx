@@ -4,12 +4,13 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
+  Typography,
 } from "@mui/material";
 import ComponentInput from "./component-input";
 import ComponentItemsList from "./component-items-list";
 import { useContext } from "react";
 import CreateConstellationContext from "../create/context/context";
+import FormButton from "../../common/form-button";
 
 export interface Props {
   open: boolean;
@@ -38,35 +39,38 @@ const ComponentForm = ({ open, onClose }: Props) => {
   return (
     <Dialog
       fullWidth
-      /* onClose={() => onClose()}  */ open={open}
+       open={open}
       sx={{
         "& .MuiDialog-paper": {
           color: "silver",
           width: "35%",
           maxWidth: "80%",
-          border: "2px solid",
-          borderColor: "#291c44",
+          border: "1px solid",
+          borderColor: "#824f87",
           borderRadius: "25px",
+          "@media (min-width: 1440px)": {
+            width: "600px", // Set the width to 500px on wide screens (like desktop monitors)
+          },
         },
       }}
     >
       <DialogTitle
         sx={{
-          margin: "0 auto",
           color: "silver",
-          backgroundColor: "#16181b",
+          backgroundColor: "#13141E",
           width: "100%",
-          display: "flex",
-          justifyContent: "center",
+          textAlign: "center",
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
         }}
       >
-        Components
+       <Typography> Add Components to your Asset</Typography>
       </DialogTitle>
-      <Box sx={{ backgroundColor: "#16181b", padding: "0px 50px" }}>
+      <Box sx={{ backgroundColor: "#13141E", padding: "0px 20px" }}>
         <ComponentInput />
       </Box>
-      <DialogContent sx={{ height: "40vh", backgroundColor: "#16181b" }}>
-        <Box sx={{ padding: "10px 24px" }}>
+      <DialogContent sx={{padding:'0 20px', height: "40vh", backgroundColor: "#13141E" }}>
+        <Box sx={{ padding: "5px 0px" }}>
           <ComponentItemsList />
         </Box>
       </DialogContent>
@@ -76,22 +80,13 @@ const ComponentForm = ({ open, onClose }: Props) => {
           justifyContent: "center",
           alignContent: "center",
           backgroundColor: "#16181b",
+          padding:'0px 20px 20px'
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            backgoundColor: "#16181b",
-            borderRadius: "10px",
-            padding: "10px 10px",
-            marginBottom: "10px",
-            width: "85%",
-            backgroundColor: "#7851D8",
-          }}
-          onClick={() => handleConfirm()}
-        >
-          Confirm
-        </Button>
+        <FormButton
+          text={'Add Components'}
+          onClick={handleConfirm}
+        /> 
       </DialogActions>
     </Dialog>
   );

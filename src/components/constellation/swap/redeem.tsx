@@ -18,6 +18,7 @@ import { getXlmAmount } from "../../../view-logic/mint";
 import { approve, getBalanceOf } from "../../../chain/contracts/token";
 import { redeem, routerGetAllowance } from "../../../chain/contracts/router";
 import { Address } from "@stellar/stellar-sdk";
+import { SwapStatus } from "./common";
 
 interface Props {
   paymentTokens: Array<TokenUserBalance>;
@@ -29,6 +30,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
+  const [swapStatus, setSwapStatus] = useState<SwapStatus>();
   const [constellationToken, setConstellationToken] =
     useState<ConstellationUserBalance>();
   const [paymentAmount, setPaymentAmount] = useState<Number | string>("");
@@ -44,25 +46,25 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
     const run = async () => {
       if (address) {
         setAccountAddress(address);
-        let _balance = 0;
-        let _allowance = 0;
-        if (constellationToken && constellationToken.address) {
-          _balance = await getBalanceOf(
+        if (constellationToken) {
+         const _balance = await getBalanceOf(
             address,
             constellationToken.address.toString(),
             sorobanContext,
           );
-          _allowance = await routerGetAllowance(
-            address,
-            constellationToken.address.toString(),
-            sorobanContext,
-          );
+
           setBalance(_balance);
-          setAllowance(_allowance);
+          const  _allowance = await routerGetAllowance(
+             address,
+             constellationToken.address.toString(),
+             sorobanContext,
+           );
+           setAllowance(_allowance);
+           setSwapStatus(SwapStatus.completed)
         }
       }
 
-      if(!!constellationAmount) {
+      if(!!constellationAmount && swapStatus === SwapStatus.init) {
          _updateReceiveTokenAmount(constellationAmount);
       }
     };
@@ -76,13 +78,14 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
   ]);
 
   const approveTx = async () => {
-    if(!constellationToken ) throw new Error('Uninitialized constellationToken')
+    if(!constellationToken ) return
     const decimals = constellationToken?.decimals as number;
     let amount_in = getSwapFeeIncludedAmount(constellationAmount as number);
     amount_in = getScaledAmount(amount_in, decimals);
     const constellation_router_str = import.meta.env.VITE_CONSTELLATION_ROUTER as string;
     const constellation_router = Address.fromString(constellation_router_str);
     const from = Address.fromString(accountAddress);
+    setSwapStatus(SwapStatus.approving)
      await approve(
       constellationToken.address.toString(),
       from,
@@ -90,8 +93,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
       amount_in,
       sorobanContext,
     );
-    const allowance  = await routerGetAllowance(accountAddress,  constellationToken.address.toString(), sorobanContext);
-    setAllowance(allowance);
+    setSwapStatus(SwapStatus.approve_completing)
 
   };
 
@@ -112,6 +114,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
 
     setConstellationAmount(amount); 
     _updateReceiveTokenAmount(amount);
+    setSwapStatus(SwapStatus.init)
   };
 
   const _updateReceiveTokenAmount = async (amount: Number | string) => {
@@ -134,7 +137,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
     if (!sorobanContext.address) {
       return;
     }
-    if(!paymentToken) return;
+    if(!paymentToken || !constellationToken) return;
     // Get the current Unix timestamp in seconds
     const currentTimestamp = Math.floor(Date.now() / 1000);
     // Add 5 hours (5 * 60 * 60 seconds)
@@ -147,8 +150,11 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
       redeem_token: Address.fromString(paymentToken.address.toString()),
        deadline,
     };
-
+     setSwapStatus(SwapStatus.swapping)
      await redeem(params, sorobanContext);
+    setPaymentAmount(0)
+    setConstellationAmount(0)
+    setSwapStatus(SwapStatus.swap_completing)
   };
 
   return (
@@ -186,6 +192,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
           allowance={allowance}
           inputTokenSelected={!!paymentToken}
           outputTokenSelected={!!constellationToken}
+          swapStatus = {swapStatus as SwapStatus}
           swap={swap}
           approve={approveTx}
         />

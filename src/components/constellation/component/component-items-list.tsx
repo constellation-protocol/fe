@@ -13,8 +13,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CreateConstellationContext from "../create/context/context";
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#262b31",
+  backgroundColor: theme.palette.mode === "dark" ? "#181A25" : "#181A25",
   ...theme.typography.body2,
+  borderRadius:'20px',
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
@@ -38,10 +39,10 @@ const ComponentItemsList = () => {
         {components.map((c, i) => {
           return (
             <React.Fragment key={i}>
-              <Stack sx={{ marginTop: "5px" }} key={i}>
-                <Item
-                  // primary={c.name}
-                  key={i}
+              <Stack 
+              spacing={10}
+              sx={{ display:'flex', marginBottom:'4px', gap:'20px' }} >
+                <Item 
                 >
                   <Stack
                     direction="row"
@@ -49,37 +50,38 @@ const ComponentItemsList = () => {
                     justifyContent="space-between"
                     alignItems="center"
                     sx={{ width: "100%" }}
-                    key={i}
+                
                   >
                     <Typography sx={{ flexGrow: 0.2, color: "silver" }}>
                       {c.symbol}
                     </Typography>
-
                     <Stack
-                      key={i}
                       direction="row"
                       spacing={3}
                       justifyContent="space-between"
                       alignItems="center"
                     >
                       <TextField
+                       
+                      placeholder="units"
                         error={c.amountError}
-                        value={c.amount}
+                        value={c.amount > 0 ? c.amount : '' }
                         required
                         onChange={(e) => addAmount(Number(e.target.value), i)}
                         sx={{
-                          width: "100px",
+                          width: "80px",
                           height: "30px",
                           "& .MuiInputBase-root": {
                             height: "100%",
                             fontSize: "14px",
+                            borderRadius: "20px",
+                            backgroundColor:'#181A25',
                             "& fieldset": {
-                              borderColor: "silver", // Default border color
+                              // borderColor: "silver",  
                               color: "#ffffff",
                             },
                           },
                           "& .MuiInputBase-input": {
-                            // padding: "8px",
                             color: "#ffffff",
                           },
                           "&.Mui-error fieldset": {
@@ -87,8 +89,8 @@ const ComponentItemsList = () => {
                           },
                         }}
                       />
-                      <IconButton key={i} onClick={() => removeToken(i)}>
-                        <RemoveIcon key={i} aria-label="remove component" />
+                      <IconButton onClick={() => removeToken(i)}>
+                        <RemoveIcon  aria-label="remove component" />
                       </IconButton>
                     </Stack>
                   </Stack>

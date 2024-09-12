@@ -41,7 +41,7 @@ const TokenInfo = ({
             readOnly: readOnly,
             startAdornment: showSelect && (
               <InputAdornment position="start">
-                <Box>
+                <Box sx={{position:'relative'}}>
                   <SelectToken
                     symbol={selectedToken?.symbol as string}
                     onClick={() => setOpenDialog(true)}

@@ -2,32 +2,25 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Chip,
-  Tab,
-  Typography,
 } from "@mui/material";
-import { TabList, TabPanel, TabContext } from "@mui/lab";
 import { useEffect, useState } from "react";
 import Mint from "./mint";
 import Redeem from "./redeem";
-import { getConstellationUserBalance } from "../../../chain/contracts/factory";
 import { useSorobanReact } from "@soroban-react/core";
 import { getTokenUserBalanceList } from "../../../chain/contracts/token";
 import { Address } from "@stellar/stellar-sdk";
 import { ConstellationUserBalance, TokenUserBalance } from "../../../types";
 import {
-  getConstellationComponents,
+
   getUserConstellationDetails,
 } from "../../../chain/contracts/constellation_token";
 
-import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-
+ 
 enum View {
   mint,
   redeem,
 }
 const Swap = () => {
-  const [activeTab, setActiveTab] = useState("1");
   const [view, setView] = useState<View>(View.mint);
 
   const [constellationTokens, setConstellationTokens] = useState<
@@ -41,7 +34,6 @@ const Swap = () => {
     const get = async () => {
       const address = sorobanContext.address;
       const constellationTokens = await getUserConstellationDetails(
-        //getConstellationUserBalance(
         address as string,
         sorobanContext,
       );
@@ -89,11 +81,13 @@ const Swap = () => {
           color: "silver",
           margin: "0 auto",
           paddingBottom: "20px",
+          "@media (min-width: 1440px)": {
+        width: "500px", // Set the width to 500px on wide screens (like desktop monitors)
+      },
         }}
       >
-        <CardHeader title="Swap"></CardHeader>
+        <CardHeader sx={{textAlign:'center', fontFamily:'NeueHaasLight'}} title="Swap"></CardHeader>
         <CardContent sx={{ position: "relative" }}>
-          {/* <Chip sx={{position:'absolute',right:'180px'}} avatar={<UnfoldMoreIcon>M</UnfoldMoreIcon>} label="Avatar" /> */}
           {getView()}
         </CardContent>
       </Card>
@@ -101,28 +95,4 @@ const Swap = () => {
   );
 };
 
-export default Swap;
-
-/**
- *  -1,2,3
- * 
- import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-
-import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
-
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-
-import SyncIcon from '@mui/icons-material/Sync';
-
-import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
-
-import ImportExportIcon from '@mui/icons-material/ImportExport';
-
-import HeightIcon from '@mui/icons-material/Height';
-
-import SouthIcon from '@mui/icons-material/South';
-
- */
+export default Swap; 

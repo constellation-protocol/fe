@@ -12,6 +12,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  Skeleton,
+  Stack,
   Typography,
 } from "@mui/material";
 import ComponentsList from "./components-list";
@@ -19,6 +21,7 @@ import ComponentsList from "./components-list";
 const ConstellationDetails = () => {
   const sorobanContext = useSorobanReact();
   const [token, setToken] = useState<ConstellationToken>();
+  const [loading, setLoading] = useState<boolean>(true);
   const [components, setComponents] = useState<Array<Component>>([]);
   const { id } = useParams();
 
@@ -30,9 +33,50 @@ const ConstellationDetails = () => {
       );
       setToken(_token);
       setComponents(_token.components);
+      setLoading(false)
     };
     get();
   }, []);
+
+  const content = () => {
+     if(token) {
+         return   <ComponentsList tokens={components} />
+     } else {
+        return (<>
+               <Stack spacing={1}> 
+          <Skeleton
+            sx={{
+              backgroundColor: "#181A25",
+              width: "100%",
+              borderRadius: "20px",
+            }}
+            variant="rectangular"
+            height={55}
+          />
+          <Skeleton
+            sx={{
+              backgroundColor: "#181A25",
+              width: "100%",
+              borderRadius: "20px",
+            }}
+            variant="rounded"
+            height={55}
+          />
+          <Skeleton
+            sx={{
+              backgroundColor: "#181A25",
+              width: "100%",
+              borderRadius: "20px",
+            }}
+            variant="rounded"
+            height={55}
+          />
+          
+        </Stack>
+        </>)
+     }
+  }
+
   return (
     <>
       <Card
@@ -45,6 +89,9 @@ const ConstellationDetails = () => {
           color: "silver",
           margin: "0 auto",
           paddingBottom: "20px",
+          "@media (min-width: 1440px)": {
+            width: "700px", // Set the width to 500px on wide screens (like desktop monitors)
+          },
         }}
       >
         <CardHeader
@@ -53,15 +100,20 @@ const ConstellationDetails = () => {
               <ListItem>
                 <ListItemText
                   sx={{
+                
                     color: "#fff",
                     "& .MuiListItemText-primary": {
                       color: "silver",
+                      fontFamily:'NeueHaasLight',
+                      fontSize:'22px',
                     },
                     "& .MuiListItemText-secondary": {
                       color: "#fff",
+                      fontFamily:'NeueHaasLight',
+                      fontSize:'16px',
                     },
                   }}
-                  primary={token?.symbol}
+                  primary={loading ? 'Loading Asset Details': (!token ? "Asset Details Not Found" : token.symbol)}
                   secondary={token?.name}
                 />
               </ListItem>
@@ -69,11 +121,11 @@ const ConstellationDetails = () => {
           }
         ></CardHeader>
         <CardContent>
-          <ComponentsList tokens={components} />
+           {content()}
         </CardContent>
         <CardActions sx={{ padding: "0 25px" }}>
-          <Link to="/swap" style={{ textDecoration: "none" }}>
-            <Typography>Mint / Redeem</Typography>
+          <Link to="/swap" style={{ textDecoration: "none", color:'#B4EFAF' }}>
+            <Typography sx={{fontFamily:'NeueHaasLight'}}> Swap</Typography>
           </Link>
         </CardActions>
       </Card>

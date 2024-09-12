@@ -1,4 +1,5 @@
 import { Box, Button, styled, Typography } from "@mui/material";
+import { SwapStatus } from "./common";
 
 interface Props {
   address: string;
@@ -7,6 +8,7 @@ interface Props {
   balance: number;
   inputTokenSelected: boolean;
   outputTokenSelected: boolean;
+  swapStatus: SwapStatus;
   swap: () => void;
   approve: () => void;
 }
@@ -33,7 +35,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
   color: "#878891",
   fontSize: "18px",
-  fontWeight: "bold",
+  fontWeight: "bold",  
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -67,7 +69,7 @@ const Info = ({ text }: InfoProps) => (
 
 const CustomButton = ({ text, onClick }: CustomButtonProps) => (
   <StyledButton fullWidth onClick={onClick}>
-    <Typography sx={{ color: "white" }}>{text}</Typography>
+    <Typography sx={{ color: "white",  }}>{text}</Typography>
   </StyledButton>
 );
 
@@ -78,32 +80,18 @@ const SwapAction = ({
   balance,
   inputTokenSelected,
   outputTokenSelected,
+  swapStatus,
   swap,
   approve,
 }: Props) => {
 
-  if (!address) {
-    return <Info text="Connect Wallet"></Info>;
-  }
-
-  if (!inputTokenSelected) {
-    return <Info text="Select Input Token"></Info>;
-  }
-
-  if (!outputTokenSelected) {
-    return <Info text="Select Output Token"></Info>;
-  }
-
-  console.log("balance === 0 || paymentAmount > balance", balance , paymentAmount )
-// 10 0000 000
-  if (balance === 0 || paymentAmount > balance) {
-    return <Info text="Insufficient Balance"></Info>;
-  }
-
-  if (paymentAmount === 0) {
-    return <Info text="Enter amount"></Info>;
-  }
-
+  if (!address)return <Info text="Connect Wallet"/>
+  if (!inputTokenSelected) return <Info text="Select Input Token"/>
+  if (!outputTokenSelected)return <Info text="Select Output Token"/>;
+  if(swapStatus === SwapStatus.swapping || swapStatus === SwapStatus.swap_completing) return <Info text="Swapping" />
+  if(swapStatus === SwapStatus.approving || swapStatus === SwapStatus.approve_completing) return <Info text="Approving" />
+  if (balance === 0 || paymentAmount > balance) return <Info text="Insufficient Balance"/>;
+  if (paymentAmount === 0) return <Info text="Enter amount"/>;
   if (paymentAmount > allowance) {
     return <CustomButton text="Approve" onClick={approve} />;
   } else if (paymentAmount <= allowance) {

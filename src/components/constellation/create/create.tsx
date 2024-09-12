@@ -4,24 +4,34 @@ import {
   CardHeader,
   CardContent,
   Stack,
-  Button,
   Chip,
   IconButton,
   CardActions,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSorobanReact } from "@soroban-react/core";
 import ComponentForm from "../component/component-form";
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CreateConstellationContext from "./context/context";
 import { createToken } from "../../../chain/contracts/router";
+import CreateAction from "./create-action";
 
 const CreateToken = () => {
   const sorobanContext = useSorobanReact();
+  const [accountAddress, setAddress] = useState<string>('')
+  const { address } =  sorobanContext;
 
-  const { components, removeToken, openComponentForm, setOpenComponentForm } =
-    useContext(CreateConstellationContext);
+  const { components, removeToken, openComponentForm, setOpenComponentForm } =useContext(CreateConstellationContext);
+
+  useEffect(() => {
+     const run = async () => {
+         if(address) {
+          setAddress(address)
+         }
+     } 
+     run();
+  },[address])
 
   const [decimal, setDecimal] = useState("");
   const [name, setName] = useState("");
@@ -48,18 +58,20 @@ const CreateToken = () => {
     <>
       <Card
         sx={{
-          border: "2px solid",
-          borderColor: "#291c44",
-          borderRadius: "25px",
-
+          border: "1px solid",
+          borderColor: "#824f87",
+          borderRadius: "30px",
           backgroundColor: "#13141E",
           color: "silver",
           width: "35%",
-          margin: "0 auto",
+          // margin: "100px auto",
           paddingBottom: "20px",
+          "@media (min-width: 1440px)": {
+        width: "500px", // Set the width to 500px on wide screens (like desktop monitors)
+      },
         }}
       >
-        <CardHeader title="Create Constellation"></CardHeader>
+        <CardHeader sx={{textAlign:'center'}} title="Create Asset"></CardHeader>
         <CardContent sx={{ overflowY: "auto", maxHeight: "60vh" }}>
           <Box
             component="form"
@@ -86,22 +98,25 @@ const CreateToken = () => {
             >
               <TextField
                 type="text"
-                label="Name"
                 variant="outlined"
-                //  required
+                placeholder="Token Name"
                 value={name}
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setName(e.target.value)}
                 sx={{
+                  backgroundColor:'#181A28',
+                  borderRadius:'14px',
                   width: "48%",
+                  "& .MuiInputBase-input": {
+                    color: "grey",
+                    overflow: "hidden", // Hide scroll bar
+                  },
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
-                    fontWeight: 600,
-                    color: "silver",
+                    color: "grey",
                   },
                   "& .MuiInputLabel-root": {
-                    fontWeight: 600,
-                    color: "silver",
+                    color: "grey",
                   },
                 }}
                 InputProps={{
@@ -113,13 +128,15 @@ const CreateToken = () => {
               <TextField
                 type="text"
                 id="outlined-basic"
-                label="Symbol"
+                placeholder="Symbol"
                 variant="outlined"
-                //  required
+                required
                 value={symbol}
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setSymbol(e.target.value)}
                 sx={{
+                  backgroundColor:'#181A28',
+                  borderRadius:'14px',
                   width: "48%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -136,19 +153,16 @@ const CreateToken = () => {
                     fontWeight: 500,
                   },
                 }}
-
-                //  helperText={!name ? "Require" : "Do not share your password"}
               />
             </Stack>
 
             <Box sx={{ width: "100%" }}>
               <TextField
-                // name="text"
+                placeholder="Decimal"
                 type="text"
                 id="outlined-basic"
-                label="Decimal"
                 variant="outlined"
-                //  required
+                required
                 value={decimal}
                 inputProps={{ readOnly: false }}
                 onChange={(e) => {
@@ -157,6 +171,8 @@ const CreateToken = () => {
                     : "";
                 }}
                 sx={{
+                  backgroundColor:'#181A28',
+                  borderRadius:'14px',
                   width: "100%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -173,20 +189,21 @@ const CreateToken = () => {
                     fontWeight: 500,
                   },
                 }}
-                //   helperText={decimalError && "Invalid decimal"}
               />
             </Box>
             <Box>
               <TextField
                 type="text"
                 id="outlined-basic"
-                label="Manager Address"
+                placeholder="Asset manager wallet address"
+                // label="Manager Address"
                 variant="outlined"
-                //  required
                 value={manager}
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setManager(e.target.value)}
                 sx={{
+                  backgroundColor:'#181A28',
+                  borderRadius:'14px',
                   width: "100%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -218,9 +235,9 @@ const CreateToken = () => {
                 margin: "0 auto",
                 backgroundColor: "#13141E",
 
-                border: "1px solid", // Set the border width and style
-                borderColor: "grey", // Set the border color
-                borderRadius: "10px", // Optional: Set the border radius
+                border: "0.5px solid", // Set the border width and style
+                borderColor: "#B4EFAF", // Set the border color
+                borderRadius: "20px", // Optional: Set the border radius
               }}
             >
               <CardHeader
@@ -228,7 +245,6 @@ const CreateToken = () => {
                   height: "5px",
                   color: "silver",
                   position: "relative",
-                  //   padding: "10px",
                   "& .MuiCardHeader-title": {
                     display: "flex",
                     justifyContent: "center",
@@ -241,7 +257,6 @@ const CreateToken = () => {
                   },
                 }}
                 title="Components"
-                //  subheader={components.length === 0 && "Click to add components"}
                 action={
                   components.length > 0 ? (
                     <Box
@@ -249,11 +264,10 @@ const CreateToken = () => {
                         position: "absolute",
                         right: "4px",
                         top: "0px",
-                        //  padding: "0px 0px 0px 0px" /* top right bottom left */,
                       }}
                     >
-                      <IconButton onClick={() => setOpenComponentForm(true)}>
-                        <AddIcon />
+                      <IconButton sx={{ color: "#7851D8",}} onClick={() => setOpenComponentForm(true)}>
+                        <AddCircleIcon />
                       </IconButton>
                     </Box>
                   ) : (
@@ -267,19 +281,13 @@ const CreateToken = () => {
                   <IconButton
                     onClick={() => setOpenComponentForm(true)}
                     sx={{
-                      border: "1px solid",
                       borderColor: "grey.800",
-                      borderRadius: "5px",
-                      //   marginTop:'10px',
                       color: "#7851D8",
-                      // padding: "10px",
-                      "&:hover": {
-                        backgroundColor: "grey.100",
+                      "&:hover": { 
                       },
                     }}
-                    //  startIcon={<AddIcon />}
                   >
-                    <AddIcon />
+                    <AddCircleIcon />
                   </IconButton>
                 )}
                 <Stack
@@ -288,17 +296,13 @@ const CreateToken = () => {
                   sx={{
                     flexWrap: "wrap",
                     justifyContent: "flex-start",
-                    // gap: 1,
-
-                    maxHeight: "20vh",
-                    // overflowY: "auto",
+                    maxHeight: "20vh", 
                   }}
                 >
                   {components.map((component, index) => (
                     <Chip
                       key={index}
                       label={`${component.symbol}, ${component.amount}`}
-                      //  variant="outlined"
                       onDelete={() => {
                         removeToken(index);
                       }}
@@ -315,40 +319,19 @@ const CreateToken = () => {
           </Box>
         </CardContent>
         <CardActions sx={{ margin: "0 auto", padding: "0 15px" }}>
-          <Button
-            variant="contained"
-            onClick={handleCreate}
-            fullWidth
-            sx={{
-              padding: "0px",
-              margin: "0 auto",
-              backgroundColor: "#7851D8",
-              "&.Mui-disabled": {
-                color: "silver",
-              },
-              font: "Neue Haas Grotesk Display Pro",
-
-              width: "100%",
-              height: "60px",
-              borderRadius: "10px",
-              boxShadow: "none",
-              "&:hover": {
-                //  backgroundColor: "#FFFFFF",
-                boxShadow: "none",
-                backgroundColor: "#7851D8",
-              },
-              "&:active": {
-                boxShadow: "none",
-                backgroundColor: "#7851D8",
-              },
-            }}
-          >
-            CREATE
-          </Button>
+            <CreateAction 
+              walletConnected={!!address}
+              hasName={!!name}
+              hasSymbol={!!symbol}
+              hasDecimal={!!decimal}
+              hashManager={!!manager}
+              hashComponents={components.length > 0}
+              handleCreate={handleCreate}
+            />
         </CardActions>
       </Card>
     </>
   );
 };
 
-export default CreateToken;
+export default CreateToken; 

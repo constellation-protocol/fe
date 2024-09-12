@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Box, LinearProgress, Stack, TextField } from "@mui/material";
 import { useSorobanReact } from "@soroban-react/core";
 import { getTokenName, getTokenSymbol } from "../../../chain/contracts/token";
 import { useContext, useState } from "react";
@@ -9,9 +9,10 @@ const ComponentInput = () => {
   const sorobanContext = useSorobanReact();
   const [address, setAddress] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { addToken, components } = useContext(CreateConstellationContext);
 
-  const handleTokenInfo = async () => {
+  const handleTokenInfo = async (address: string) => {
     if (
       !address ||
       (components.length > 0 &&
@@ -21,6 +22,7 @@ const ComponentInput = () => {
       return;
     }
     setError(false);
+    setLoading(true)
     const name = await getTokenName(address, sorobanContext);
     const symbol = await getTokenSymbol(address, sorobanContext);
     addToken({
@@ -30,11 +32,14 @@ const ComponentInput = () => {
       amount: 0,
       amountError: false,
     });
-  };
+    setAddress('')
+    setLoading(false)
+  }; 
 
   const handleAddress = (input: string) => {
-    console.log("input ", input);
+ 
     setAddress(input);
+    handleTokenInfo(input)
   };
 
   return (
@@ -49,11 +54,13 @@ const ComponentInput = () => {
           justifyContent: "space-between",
         }}
       >
+        <Box sx={{ position: "relative", width: "100%", padding:'0' }}> 
         <TextField
+        //  onChange={handleTokenInfo}
           error={error}
           type="text"
           id="outlined-basic"
-          label="Token Address"
+          placeholder="Enter Token Address"
           variant="outlined"
           // required
           value={address}
@@ -61,8 +68,11 @@ const ComponentInput = () => {
           onChange={(e) => handleAddress(e.target.value)}
           sx={{
             color: "#ffffff",
-            width: "85%",
+            width: "100%",
+            borderRadius: "14px",
+             backgroundColor:'#181A28',
             "& .MuiInputBase-root": {
+               border: "none solid",
               height: "100%",
               fontSize: "14px",
               color: "#ffffff",
@@ -72,13 +82,12 @@ const ComponentInput = () => {
             },
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "silver",
                 color: "#ffffff",
               },
               "&.Mui-error fieldset": {
-                borderColor: "red",
+                borderColor: "pink",
               },
-            },
+            }, 
           }}
           InputProps={{
             style: {
@@ -86,25 +95,18 @@ const ComponentInput = () => {
             },
           }}
         />
-
-        <Button
-          onClick={handleTokenInfo}
-          sx={{
-            width: "15%",
-            height: "100%",
-            border: "1px solid",
-            borderColor: "grey.300",
-            borderRadius: "5px",
-            padding: "15px 16px",
-            backgroundColor: "background.paper",
-            "&:hover": {
-              backgroundColor: "grey.100",
-            },
-          }}
-          // startIcon={<AddIcon />}
-        >
-          Add{" "}
-        </Button>
+       { loading && <LinearProgress
+        sx={{
+          width:'100%',
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "1px", // Adjust the thickness of the progress bar
+          borderRadius: "0px 0px 14px 14px", // Match the border radius of the TextField
+        }}
+       color="secondary" />}
+     </Box> 
       </Stack>
     </>
   );
