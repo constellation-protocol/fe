@@ -21,12 +21,14 @@ import { Address } from "@stellar/stellar-sdk";
 import { SwapStatus } from "./common";
 
 interface Props {
+  loadingConstellationTokens: boolean;
+  loadingPaymentTokens: boolean;
   paymentTokens: Array<TokenUserBalance>;
   constellationTokens: Array<ConstellationUserBalance>;
   switchView: () => void;
 }
 
-const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
+const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,loadingPaymentTokens, switchView }: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
@@ -164,6 +166,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
         isTokenIn = {true}
           amount={constellationAmount as number}
           readOnly = {false}
+          loadingTokens = {loadingConstellationTokens}
           onAmountChange={handleAmountChange}
           selectedToken={constellationToken}
           setSelectedToken={handleSetConstellationToken}
@@ -179,6 +182,7 @@ const Redeem = ({ paymentTokens, constellationTokens, switchView }: Props) => {
           selectedToken={paymentToken}
           setSelectedToken={setPaymentToken}
           tokens={paymentTokens}
+          loadingTokens = {loadingPaymentTokens}
           label="Buy"
           showSelect={true}
         />

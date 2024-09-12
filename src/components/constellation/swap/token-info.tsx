@@ -9,6 +9,7 @@ interface Props {
   showSelect: boolean;
   isTokenIn: boolean;
   readOnly: boolean;
+  loadingTokens: boolean;
   amount: Number | undefined;
   tokens: Array<TokenUserBalance>;
   onAmountChange: (amount: number) => void;
@@ -23,6 +24,7 @@ const TokenInfo = ({
   readOnly,
   tokens,
   isTokenIn,
+  loadingTokens,
   onAmountChange,
   selectedToken,
   setSelectedToken,
@@ -46,10 +48,12 @@ const TokenInfo = ({
                     symbol={selectedToken?.symbol as string}
                     onClick={() => setOpenDialog(true)}
                   />
+             
                   <SelectTokenDialog
                     onSelectToken={setSelectedToken}
                     tokens={tokens}
                     open={openDialog}
+                    loadingTokens = {loadingTokens}
                     onClose={() => setOpenDialog(false)}
                   />
                 </Box>

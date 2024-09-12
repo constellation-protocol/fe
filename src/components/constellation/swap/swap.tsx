@@ -29,6 +29,8 @@ const Swap = () => {
   const [paymentTokens, setPaymentTokens] = useState<Array<TokenUserBalance>>(
     [],
   );
+  const [loadingConstellationTokens, setLoadingConstellationTokens] = useState<boolean>(true);
+  const [loadingPaymentTokens, setLoadingPaymentTokens] = useState<boolean>(true);
   const sorobanContext = useSorobanReact();
   useEffect(() => {
     const get = async () => {
@@ -45,6 +47,9 @@ const Swap = () => {
       );
       setConstellationTokens(constellationTokens);
       setPaymentTokens(paymentTokens);
+
+      setLoadingConstellationTokens(false);
+      setLoadingPaymentTokens(false)
     };
     get();
   }, [sorobanContext.address]);
@@ -56,6 +61,8 @@ const Swap = () => {
           switchView={() => setView(View.redeem)}
           paymentTokens={paymentTokens}
           constellationTokens={constellationTokens}
+          loadingConstellationTokens = {loadingConstellationTokens}
+          loadingPaymentTokens = {loadingPaymentTokens}
         />
       );
     }
@@ -65,6 +72,8 @@ const Swap = () => {
           switchView={() => setView(View.mint)}
           paymentTokens={paymentTokens}
           constellationTokens={constellationTokens}
+          loadingConstellationTokens = {loadingConstellationTokens}
+          loadingPaymentTokens = {loadingPaymentTokens}
         />
       );
     }

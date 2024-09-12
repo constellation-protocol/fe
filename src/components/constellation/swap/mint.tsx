@@ -27,10 +27,12 @@ import { SwapStatus } from "./common";
 interface Props {
   paymentTokens: Array<TokenUserBalance>;
   constellationTokens: Array<ConstellationUserBalance>;
+  loadingConstellationTokens: boolean;
+   loadingPaymentTokens: boolean;
   switchView: () => void;
 }
 
-const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
+const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loadingConstellationTokens,switchView }: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
@@ -175,7 +177,8 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
           readOnly = {false}
           onAmountChange={handlePaymentAmountChange}
           selectedToken={paymentToken}
-          setSelectedToken={handleSetPaymentToken}
+          setSelectedToken={handleSetPaymentToken} 
+          loadingTokens = {loadingPaymentTokens}
           tokens={paymentTokens}
           label="Sell"
           showSelect={true}
@@ -189,6 +192,7 @@ const Mint = ({ paymentTokens, constellationTokens, switchView }: Props) => {
           selectedToken={constellationToken}
           setSelectedToken={handleSetConstellationToken}
           tokens={constellationTokens}
+          loadingTokens = {loadingConstellationTokens}
           label="Buy"
           showSelect={true}
         />
