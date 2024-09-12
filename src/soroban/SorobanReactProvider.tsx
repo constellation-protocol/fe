@@ -6,23 +6,11 @@ import { xbull } from "@soroban-react/xbull";
 import { hana } from "@soroban-react/hana";
 import { ChainMetadata, Connector, WalletChain } from "@soroban-react/types";
 import useMounted from "../hooks/useMounted";
-// import useMounted from 'hooks/useMounted';
 
-// Set allowed chains:
-// const chains: ChainMetadata[] =
-//   process.env.NODE_ENV === 'production' ? [testnet, mainnet] : [standalone, testnet, mainnet];
 const chains: ChainMetadata[] = [standalone, testnet, mainnet];
-// Set chain by default:
-// Helper function
-const findWalletChainByName = (name: string): WalletChain | undefined => {
-  return chains.find((chain) => chain.id === name);
-};
 
-// Get the active chain based on the environment variable or default to testnet
-const activeChainName = testnet;
-const activeChain: WalletChain = testnet; //findWalletChainByName(activeChainName) || testnet;
+const activeChain: WalletChain = testnet; 
 
-// Set allowed connectors
 export const walletConnectors: Connector[] = [
   freighter(),
   xbull(),

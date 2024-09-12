@@ -19,7 +19,7 @@ import CreateAction from "./create-action";
 
 const CreateToken = () => {
   const sorobanContext = useSorobanReact();
-  const [accountAddress, setAddress] = useState<string>('')
+  const [, setAddress] = useState<string>('')
   const { address } =  sorobanContext;
 
   const { components, removeToken, openComponentForm, setOpenComponentForm } =useContext(CreateConstellationContext);

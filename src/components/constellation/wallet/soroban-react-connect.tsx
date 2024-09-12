@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useSorobanReact } from "@soroban-react/core";
 import { ConnectButton } from "@soroban-react/connect-button";
 

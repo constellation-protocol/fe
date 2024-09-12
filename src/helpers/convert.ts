@@ -31,18 +31,16 @@ export function scvalToBigInt(scval: xdr.ScVal | undefined): BigInt {
     }
     case xdr.ScValType.scvU128(): {
       const parts = scval.u128();
-      const a = parts.hi();
-      const b = parts.lo();
-      return decodei128ScVal(scval);
-      // return bufToBigint(new Uint32Array([a.high, a.low, b.high, b.low]));
+       parts.hi();
+     parts.lo();
+      return decodei128ScVal(scval); 
     }
     case xdr.ScValType.scvI128(): {
       const parts = scval.i128();
-      const a = parts.hi();
-      const b = parts.lo();
+      parts.hi();
+      parts.lo();
 
-      return decodei128ScVal(scval);
-      // return bufToBigint(new Int32Array([a.high, a.low, b.high, b.low]));
+      return decodei128ScVal(scval); 
     }
     default: {
       throw new Error(`Invalid type for scvalToBigInt: ${scval?.switch().name}`);

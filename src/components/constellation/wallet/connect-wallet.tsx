@@ -6,7 +6,7 @@ import { useSorobanReact } from "@soroban-react/core";
 
 const WalletButton = () => {
   const [open, setOpen] = useState(false);
-  const [key, setKey] = useState("");
+  const [, setKey] = useState("");
   const sorobanContext = useSorobanReact();
 
   useEffect(() => {}, []);

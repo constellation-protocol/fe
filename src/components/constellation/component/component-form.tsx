@@ -17,7 +17,7 @@ export interface Props {
   onClose: () => void;
 }
 
-const ComponentForm = ({ open, onClose }: Props) => {
+const ComponentForm = ({ open,  }: Props) => {
   const { components, setOpenComponentForm, setError } = useContext(
     CreateConstellationContext,
   );

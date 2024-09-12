@@ -6,7 +6,7 @@ import { Button, styled, Typography } from "@mui/material";
     onClick: () => void;
   } 
 
-  const StyledButton = styled(Button)(({ theme }) => ({
+  const StyledButton = styled(Button)(({  }) => ({
     padding: "0px",
     margin: "0 auto",
     backgroundColor: "rgb(136, 102, 221)",

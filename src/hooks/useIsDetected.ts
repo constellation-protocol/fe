@@ -1,5 +1,3 @@
-import { SorobanContextType, useSorobanReact } from "@soroban-react/core";
-import { Connector } from "@soroban-react/types";
 import { isConnected } from "@stellar/freighter-api";
 import { useEffect, useState } from "react";
 

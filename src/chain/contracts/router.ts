@@ -15,7 +15,7 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
     const _manager = nativeToScVal(manager, {type:'address'});
     const _components = nativeToScVal(components, {type:'Vec<Address>'});
     const _amounts = nativeToScVal(amounts, {type:'i128'});
-    let response = await contractInvoke({
+    await contractInvoke({
       contractAddress: contractAddress,
       method: "create_token",
       sorobanContext,
@@ -35,7 +35,7 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
     const _to = nativeToScVal(to, {type:'address'});
     const _deadline = nativeToScVal(deadline,{type:'u64'});
 
-    let response = await contractInvoke({
+     await contractInvoke({
       contractAddress: contractAddress,
       method: "mint_exact_tokens",
       sorobanContext,
@@ -53,7 +53,7 @@ export const createToken = async ({decimal, name, symbol,manager,components, amo
     const _constellation_token_id = nativeToScVal(constellation_token, {type:'address'});
     const _to = nativeToScVal(to, {type:'address'});
     const _deadline = nativeToScVal(deadline,{type:'u64'});
-    let response = await contractInvoke({
+     await contractInvoke({
       contractAddress: contractAddress,
       method: "redeem_into",
       sorobanContext,

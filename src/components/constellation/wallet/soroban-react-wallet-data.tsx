@@ -1,4 +1,3 @@
-import React from "react";
 import { useSorobanReact } from "@soroban-react/core";
 import { WalletData } from "@soroban-react/wallet-data";
 

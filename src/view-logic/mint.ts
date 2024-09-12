@@ -1,5 +1,5 @@
 import { SorobanContextType } from "@soroban-react/core";
-import { Address, nativeToScVal } from "@stellar/stellar-sdk";
+import { Address } from "@stellar/stellar-sdk";
 import { get_amounts_in } from "../chain/contracts/soroswap_router";
 import { Component } from "../types";
 
@@ -20,19 +20,7 @@ export const getUnitConstellationAmountIn = async (token_in: string, token_in_de
         )
     
         //1000 000 
-        let amount_in = amounts_in[0];
- 
-
-        // if(token_in_decimals > component.decimals) {
-        //     const diff = token_in_decimals - component.decimals;
-
-        //     amount_in = amount_in * (10**diff);
-
-        // } else  {
-        //     const diff =component.decimals - token_in_decimals ;
-
-        //     amount_in = amount_in / (10 ** diff);
-        // }
+        let amount_in = amounts_in[0]; 
 
         total_amoint_int += amount_in;     
     }
@@ -56,8 +44,6 @@ export const getXlmAmount= async (amount_in: number,token_in: string,token_in_de
     let total_components_price = await getUnitConstellationAmountIn(token_in,token_in_decimals, components, sorobanContext);
 
     const constellation_amount = amount_in * total_components_price
-
-    console.log('-> constellation_amount ',constellation_amount)
  
     return constellation_amount / Math.pow(10, token_in_decimals)
 

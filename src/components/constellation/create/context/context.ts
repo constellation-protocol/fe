@@ -18,10 +18,10 @@ const CreateConstellationContext = createContext<CreateConstellationContextType>
     openComponentForm: false,
     setTokens: () => {},
     setOpenComponentForm: () => {},
-    addToken: (token: FormComponent) => {}, // Default no-op function for setCompItem
-    removeToken:(index: number)=>{},
-    addAmount: (amount: number, index: number) => {},
-    setError: ( error: boolean, index: number) => {}
+    addToken: (_token: FormComponent) => {}, // Default no-op function for setCompItem
+    removeToken:(_index: number)=>{},
+    addAmount: (_amount: number, _: number) => {},
+    setError: ( _error: boolean, _: number) => {}
 });
 
 export default CreateConstellationContext

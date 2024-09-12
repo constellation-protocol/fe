@@ -17,7 +17,6 @@ import {
   Skeleton,
   Stack,
   Typography,
-  Button,
 } from "@mui/material";
 import { ConstellationToken } from "../../../types";
 import { formatAddress } from "../../../utils";

@@ -8,7 +8,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CreateConstellationContext from "../create/context/context";
 
@@ -22,7 +22,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const ComponentItemsList = () => {
-  const [error, setError] = useState(false);
 
   const { components, addAmount, removeToken } = useContext(
     CreateConstellationContext,

@@ -22,7 +22,7 @@ interface CustomButtonProps {
   onClick: () => void;
 }
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Box)(({   }) => ({
   backgroundColor: "#212637",
   width: "100%",
   padding: "18px 20px",
@@ -32,13 +32,13 @@ const StyledBox = styled(Box)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const StyledText = styled(Typography)(({ theme }) => ({
+const StyledText = styled(Typography)(({   }) => ({
   color: "#878891",
   fontSize: "18px",
   fontWeight: "bold",  
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(({   }) => ({
   padding: "0px",
   margin: "0 auto",
   backgroundColor: "rgb(136, 102, 221)",

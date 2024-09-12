@@ -36,10 +36,6 @@ function SelectedWallet(props: Props) {
     onClose();
   };
 
-  const disconnect = async () => {
-    await sorobanContext.disconnect();
-  };
-
   return (
     <Dialog
       onClose={() => onClose()}

@@ -5,8 +5,7 @@ interface InfoProps {
     text: string;
   }
   
- 
-  const StyledBox = styled(Box)(({ theme }) => ({
+  const StyledBox = styled(Box)(({   }) => ({
     backgroundColor: "#212637",
     width: "100%",
     padding: "18px 20px",
@@ -16,7 +15,7 @@ interface InfoProps {
     justifyContent: "center",
   }));
   
-  const StyledText = styled(Typography)(({ theme }) => ({
+  const StyledText = styled(Typography)(({   }) => ({
     color: "#878891",
     fontSize: "18px",
     fontWeight: "bold",
