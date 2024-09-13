@@ -36,7 +36,8 @@ const SelectTokenDialog = ({
   const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return "500px";
+    if (isLargeDesktop) return "400px";
+    if ( isDesktop) return "400px";
     else if (isTablet) return "50%";
     else if (isMobile) return "70%";
   };
@@ -149,9 +150,6 @@ const SelectTokenDialog = ({
             padding: 0,
             width: getMainCardWidth(),
             border: "2px solid #291c44",
-            "@media (min-width: 1440px)": {
-              width: "450px", // Set the width to 500px on wide screens (like desktop monitors)
-            },
           },
         }}
       >
