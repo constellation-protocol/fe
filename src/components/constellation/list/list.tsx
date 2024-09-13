@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getTokenList } from "../../../chain/contracts/factory";
 import { useSorobanReact } from "@soroban-react/core";
-import Popover from '@mui/material/Popover';
+import Popover from "@mui/material/Popover";
 
 import {
   Card,
@@ -26,36 +26,39 @@ import { Link } from "react-router-dom";
 
 const ListToken = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
-  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between("md", "lg")); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return '500px';
-    else if (isTablet) return '90%';
-    else if (isMobile) return '90%'
-  }
+    if (isLargeDesktop || isDesktop) return "500px";
+    else if (isTablet) return "90%";
+    else if (isMobile) return "90%";
+  };
 
   const sorobanContext = useSorobanReact();
   const [tokens, setTokens] = useState<Array<ConstellationToken>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLSpanElement | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   useEffect(() => {
     const conn = async () => {
       const _tokens = await getTokenList(sorobanContext);
       setTokens(_tokens);
-      setLoading(false)
+      setLoading(false);
     };
 
     conn();
   }, []);
 
-  const handleClick = (event: React.MouseEvent<HTMLSpanElement>, address: string) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLSpanElement>,
+    address: string,
+  ) => {
     setAnchorEl(event.currentTarget);
-    setSelectedAddress(address)
+    setSelectedAddress(address);
   };
 
   const handleClose = () => {
@@ -63,75 +66,104 @@ const ListToken = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   const content = () => {
-
-    
     if (tokens.length > 0) {
-
-      
       return (
         <>
-       
-        <Table
-          aria-label="simple table"
-          sx={{
-            "& .MuiTableCell-root": { color: "white" },
-            "& .MuiTableRow-root": { borderBottom: "1px solid silver" },
-          }}
-        >
-          <TableHead>
-            <TableRow sx={{ color: "white" }}>
-              <TableCell sx={{ color: "white",fontFamily:'NeueHaasLight' }}>Token</TableCell>
-              <TableCell sx={{fontFamily:'NeueHaasLight'}}>Address</TableCell>
-              <TableCell sx={{fontFamily:'NeueHaasLight'}}>TVL</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tokens.map((token, i) => {
-              return (
-                <React.Fragment key={i}>
-                  <TableRow>
-                    <TableCell><Typography sx={{fontFamily:'NeueHaasLight'}}>{token.symbol}</Typography></TableCell>
-                    <TableCell aria-describedby={id} >
-                      <Typography sx={{fontFamily:'NeueHaasLight', color:'#B4EFAF', cursor:'pointer' }} onClick={(e)=>handleClick(e,token.address.toString())} >{formatAddress(token.address.toString())}</Typography> 
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>
-                      <Link to={`/products/${token.address}`} style={{textDecoration:'none'}} ><Typography sx={{color:'#B4EFAF', fontFamily:'NeueHaasLight'}}>details</Typography></Link>
-                    </TableCell>
-                  </TableRow>
-                </React.Fragment>
-              );
-            })}
-          </TableBody>
-        </Table> 
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        PaperProps={{
-          sx: {
-            backgroundColor: '#824F87',
-            borderRadius: '10px',
-            color: '#FFFFFF',
-            
-          }
-        }}
-      >
-        <Typography sx={{ p: 2, borderRadius:'24px',   fontFamily:'NeueHaasLight'}}>{selectedAddress}</Typography>
-      </Popover>
+          <Table
+            aria-label="simple table"
+            sx={{
+              "& .MuiTableCell-root": { color: "white" },
+              "& .MuiTableRow-root": { borderBottom: "1px solid silver" },
+            }}
+          >
+            <TableHead>
+              <TableRow sx={{ color: "white" }}>
+                <TableCell sx={{ color: "white", fontFamily: "NeueHaasLight" }}>
+                  Token
+                </TableCell>
+                <TableCell sx={{ fontFamily: "NeueHaasLight" }}>
+                  Address
+                </TableCell>
+                <TableCell sx={{ fontFamily: "NeueHaasLight" }}>TVL</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tokens.map((token, i) => {
+                return (
+                  <React.Fragment key={i}>
+                    <TableRow>
+                      <TableCell>
+                        <Typography sx={{ fontFamily: "NeueHaasLight" }}>
+                          {token.symbol}
+                        </Typography>
+                      </TableCell>
+                      <TableCell aria-describedby={id}>
+                        <Typography
+                          sx={{
+                            fontFamily: "NeueHaasLight",
+                            color: "#B4EFAF",
+                            cursor: "pointer",
+                          }}
+                          onClick={(e) =>
+                            handleClick(e, token.address.toString())
+                          }
+                        >
+                          {formatAddress(token.address.toString())}
+                        </Typography>
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/products/${token.address}`}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Typography
+                            sx={{
+                              color: "#B4EFAF",
+                              fontFamily: "NeueHaasLight",
+                            }}
+                          >
+                            details
+                          </Typography>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            PaperProps={{
+              sx: {
+                backgroundColor: "#824F87",
+                borderRadius: "10px",
+                color: "#FFFFFF",
+              },
+            }}
+          >
+            <Typography
+              sx={{ p: 2, borderRadius: "24px", fontFamily: "NeueHaasLight" }}
+            >
+              {selectedAddress}
+            </Typography>
+          </Popover>
         </>
       );
     } else {
       return (
-        <Stack spacing={1}> 
+        <Stack spacing={1}>
           <Skeleton
             sx={{
               backgroundColor: "#181A25",
@@ -167,7 +199,7 @@ const ListToken = () => {
             }}
             variant="rounded"
             height={55}
-          /> 
+          />
         </Stack>
       );
     }
@@ -186,7 +218,13 @@ const ListToken = () => {
         }}
       >
         <CardHeader
-          title={loading ? "Loading Assets": (!loading && tokens.length ===0? "No Assets Found": "All Assets")}
+          title={
+            loading
+              ? "Loading Assets"
+              : !loading && tokens.length === 0
+                ? "No Assets Found"
+                : "All Assets"
+          }
           sx={{
             "& .MuiCardHeader-title": {
               display: "flex",
@@ -210,7 +248,7 @@ const ListToken = () => {
             }}
           >
             {" "}
-            {content()} 
+            {content()}
           </TableContainer>
         </CardContent>
       </Card>

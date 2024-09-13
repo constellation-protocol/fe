@@ -14,38 +14,39 @@ import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
 import { useSorobanReact } from "@soroban-react/core";
 import ComponentForm from "../component/component-form";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CreateConstellationContext from "./context/context";
 import { createToken } from "../../../chain/contracts/router";
 import CreateAction from "./create-action";
 
 const CreateToken = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
-  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between("md", "lg")); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return '500px';
-    else if (isTablet) return '60%';
-    else if (isMobile) return '90%'
-  }
+    if (isLargeDesktop || isDesktop) return "500px";
+    else if (isTablet) return "60%";
+    else if (isMobile) return "90%";
+  };
 
   const sorobanContext = useSorobanReact();
-  const [, setAddress] = useState<string>('')
-  const { address } =  sorobanContext;
+  const [, setAddress] = useState<string>("");
+  const { address } = sorobanContext;
 
-  const { components, removeToken, openComponentForm, setOpenComponentForm } =useContext(CreateConstellationContext);
+  const { components, removeToken, openComponentForm, setOpenComponentForm } =
+    useContext(CreateConstellationContext);
 
   useEffect(() => {
-     const run = async () => {
-         if(address) {
-          setAddress(address)
-         }
-     } 
-     run();
-  },[address])
+    const run = async () => {
+      if (address) {
+        setAddress(address);
+      }
+    };
+    run();
+  }, [address]);
 
   const [decimal, setDecimal] = useState("");
   const [name, setName] = useState("");
@@ -81,7 +82,10 @@ const CreateToken = () => {
           paddingBottom: "20px",
         }}
       >
-        <CardHeader sx={{textAlign:'center'}} title="Create Asset"></CardHeader>
+        <CardHeader
+          sx={{ textAlign: "center" }}
+          title="Create Asset"
+        ></CardHeader>
         <CardContent sx={{ overflowY: "auto", maxHeight: "60vh" }}>
           <Box
             component="form"
@@ -114,8 +118,8 @@ const CreateToken = () => {
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setName(e.target.value)}
                 sx={{
-                  backgroundColor:'#181A28',
-                  borderRadius:'14px',
+                  backgroundColor: "#181A28",
+                  borderRadius: "14px",
                   width: "48%",
                   "& .MuiInputBase-input": {
                     color: "grey",
@@ -145,8 +149,8 @@ const CreateToken = () => {
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setSymbol(e.target.value)}
                 sx={{
-                  backgroundColor:'#181A28',
-                  borderRadius:'14px',
+                  backgroundColor: "#181A28",
+                  borderRadius: "14px",
                   width: "48%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -181,8 +185,8 @@ const CreateToken = () => {
                     : "";
                 }}
                 sx={{
-                  backgroundColor:'#181A28',
-                  borderRadius:'14px',
+                  backgroundColor: "#181A28",
+                  borderRadius: "14px",
                   width: "100%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -211,8 +215,8 @@ const CreateToken = () => {
                 inputProps={{ readOnly: false }}
                 onChange={(e) => setManager(e.target.value)}
                 sx={{
-                  backgroundColor:'#181A28',
-                  borderRadius:'14px',
+                  backgroundColor: "#181A28",
+                  borderRadius: "14px",
                   width: "100%",
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
@@ -275,7 +279,10 @@ const CreateToken = () => {
                         top: "0px",
                       }}
                     >
-                      <IconButton sx={{ color: "#7851D8",}} onClick={() => setOpenComponentForm(true)}>
+                      <IconButton
+                        sx={{ color: "#7851D8" }}
+                        onClick={() => setOpenComponentForm(true)}
+                      >
                         <AddCircleIcon />
                       </IconButton>
                     </Box>
@@ -292,8 +299,7 @@ const CreateToken = () => {
                     sx={{
                       borderColor: "grey.800",
                       color: "#7851D8",
-                      "&:hover": { 
-                      },
+                      "&:hover": {},
                     }}
                   >
                     <AddCircleIcon />
@@ -305,7 +311,7 @@ const CreateToken = () => {
                   sx={{
                     flexWrap: "wrap",
                     justifyContent: "flex-start",
-                    maxHeight: "20vh", 
+                    maxHeight: "20vh",
                   }}
                 >
                   {components.map((component, index) => (
@@ -328,19 +334,19 @@ const CreateToken = () => {
           </Box>
         </CardContent>
         <CardActions sx={{ margin: "0 auto", padding: "0 15px" }}>
-            <CreateAction 
-              walletConnected={!!address}
-              hasName={!!name}
-              hasSymbol={!!symbol}
-              hasDecimal={!!decimal}
-              hashManager={!!manager}
-              hashComponents={components.length > 0}
-              handleCreate={handleCreate}
-            />
+          <CreateAction
+            walletConnected={!!address}
+            hasName={!!name}
+            hasSymbol={!!symbol}
+            hasDecimal={!!decimal}
+            hashManager={!!manager}
+            hashComponents={components.length > 0}
+            handleCreate={handleCreate}
+          />
         </CardActions>
       </Card>
     </>
   );
 };
 
-export default CreateToken; 
+export default CreateToken;

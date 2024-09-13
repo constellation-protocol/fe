@@ -4,8 +4,7 @@ import SelectedWallet from "./select-wallet";
 import { formatAddress } from "../../../utils";
 import { useSorobanReact } from "@soroban-react/core";
 
-
-const WalletButton = (  ) => {
+const WalletButton = () => {
   const [open, setOpen] = useState(false);
   const [, setKey] = useState("");
   const sorobanContext = useSorobanReact();
@@ -28,7 +27,11 @@ const WalletButton = (  ) => {
       <Button
         variant="contained"
         onClick={handleClick}
-        sx={{ backgroundColor: "#8865DD", borderRadius: "15px", fontFamily:'NeueHaasLight' }}
+        sx={{
+          backgroundColor: "#8865DD",
+          borderRadius: "15px",
+          fontFamily: "NeueHaasLight",
+        }}
       >
         {!!sorobanContext.address
           ? formatAddress(sorobanContext.address)

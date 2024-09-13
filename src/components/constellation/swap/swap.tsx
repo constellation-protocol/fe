@@ -12,29 +12,24 @@ import { useSorobanReact } from "@soroban-react/core";
 import { getTokenUserBalanceList } from "../../../chain/contracts/token";
 import { Address } from "@stellar/stellar-sdk";
 import { ConstellationUserBalance, TokenUserBalance } from "../../../types";
-import {
+import { getUserConstellationDetails } from "../../../chain/contracts/constellation_token";
 
-  getUserConstellationDetails,
-} from "../../../chain/contracts/constellation_token";
-
-
- 
 enum View {
   mint,
   redeem,
 }
 const Swap = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
-  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between("md", "lg")); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return '500px';
-    else if (isTablet) return '60%';
-    else if (isMobile) return '90%'
-  }
+    if (isLargeDesktop || isDesktop) return "500px";
+    else if (isTablet) return "60%";
+    else if (isMobile) return "90%";
+  };
 
   const [view, setView] = useState<View>(View.mint);
 
@@ -44,8 +39,10 @@ const Swap = () => {
   const [paymentTokens, setPaymentTokens] = useState<Array<TokenUserBalance>>(
     [],
   );
-  const [loadingConstellationTokens, setLoadingConstellationTokens] = useState<boolean>(true);
-  const [loadingPaymentTokens, setLoadingPaymentTokens] = useState<boolean>(true);
+  const [loadingConstellationTokens, setLoadingConstellationTokens] =
+    useState<boolean>(true);
+  const [loadingPaymentTokens, setLoadingPaymentTokens] =
+    useState<boolean>(true);
   const sorobanContext = useSorobanReact();
   useEffect(() => {
     const get = async () => {
@@ -64,7 +61,7 @@ const Swap = () => {
       setPaymentTokens(paymentTokens);
 
       setLoadingConstellationTokens(false);
-      setLoadingPaymentTokens(false)
+      setLoadingPaymentTokens(false);
     };
     get();
   }, [sorobanContext.address]);
@@ -76,8 +73,8 @@ const Swap = () => {
           switchView={() => setView(View.redeem)}
           paymentTokens={paymentTokens}
           constellationTokens={constellationTokens}
-          loadingConstellationTokens = {loadingConstellationTokens}
-          loadingPaymentTokens = {loadingPaymentTokens}
+          loadingConstellationTokens={loadingConstellationTokens}
+          loadingPaymentTokens={loadingPaymentTokens}
         />
       );
     }
@@ -87,8 +84,8 @@ const Swap = () => {
           switchView={() => setView(View.mint)}
           paymentTokens={paymentTokens}
           constellationTokens={constellationTokens}
-          loadingConstellationTokens = {loadingConstellationTokens}
-          loadingPaymentTokens = {loadingPaymentTokens}
+          loadingConstellationTokens={loadingConstellationTokens}
+          loadingPaymentTokens={loadingPaymentTokens}
         />
       );
     }
@@ -107,13 +104,14 @@ const Swap = () => {
           paddingBottom: "20px",
         }}
       >
-        <CardHeader sx={{textAlign:'center', fontFamily:'NeueHaasLight'}} title="Swap"></CardHeader>
-        <CardContent sx={{ position: "relative" }}>
-          {getView()}
-        </CardContent>
+        <CardHeader
+          sx={{ textAlign: "center", fontFamily: "NeueHaasLight" }}
+          title="Swap"
+        ></CardHeader>
+        <CardContent sx={{ position: "relative" }}>{getView()}</CardContent>
       </Card>
     </>
   );
 };
 
-export default Swap; 
+export default Swap;

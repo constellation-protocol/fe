@@ -10,8 +10,8 @@ import { Wallet } from "../../../types";
 import { useWallets } from "../../../hooks/useWallets";
 import { useSorobanReact } from "@soroban-react/core";
 import { useEffect } from "react";
- 
- export interface Props {
+
+export interface Props {
   open: boolean;
   onConnect: (value: string) => void;
   onClose: () => void;
@@ -23,8 +23,7 @@ function SelectedWallet(props: Props) {
   const wallets = useWallets();
   const sorobanContext = useSorobanReact();
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const handleListItemClick = async (wallet: Wallet, isDetected: boolean) => {
     if (isDetected) {

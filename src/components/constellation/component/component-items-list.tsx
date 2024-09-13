@@ -15,14 +15,13 @@ import CreateConstellationContext from "../create/context/context";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#181A25" : "#181A25",
   ...theme.typography.body2,
-  borderRadius:'20px',
+  borderRadius: "20px",
   padding: theme.spacing(1),
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
 
 const ComponentItemsList = () => {
-
   const { components, addAmount, removeToken } = useContext(
     CreateConstellationContext,
   );
@@ -38,18 +37,17 @@ const ComponentItemsList = () => {
         {components.map((c, i) => {
           return (
             <React.Fragment key={i}>
-              <Stack 
-              spacing={10}
-              sx={{ display:'flex', marginBottom:'4px', gap:'20px' }} >
-                <Item 
-                >
+              <Stack
+                spacing={10}
+                sx={{ display: "flex", marginBottom: "4px", gap: "20px" }}
+              >
+                <Item>
                   <Stack
                     direction="row"
                     spacing={3}
                     justifyContent="space-between"
                     alignItems="center"
                     sx={{ width: "100%" }}
-                
                   >
                     <Typography sx={{ flexGrow: 0.2, color: "silver" }}>
                       {c.symbol}
@@ -61,10 +59,9 @@ const ComponentItemsList = () => {
                       alignItems="center"
                     >
                       <TextField
-                       
-                      placeholder="units"
+                        placeholder="units"
                         error={c.amountError}
-                        value={c.amount > 0 ? c.amount : '' }
+                        value={c.amount > 0 ? c.amount : ""}
                         required
                         onChange={(e) => addAmount(Number(e.target.value), i)}
                         sx={{
@@ -74,9 +71,9 @@ const ComponentItemsList = () => {
                             height: "100%",
                             fontSize: "14px",
                             borderRadius: "20px",
-                            backgroundColor:'#181A25',
+                            backgroundColor: "#181A25",
                             "& fieldset": {
-                              // borderColor: "silver",  
+                              // borderColor: "silver",
                               color: "#ffffff",
                             },
                           },
@@ -89,7 +86,7 @@ const ComponentItemsList = () => {
                         }}
                       />
                       <IconButton onClick={() => removeToken(i)}>
-                        <RemoveIcon  aria-label="remove component" />
+                        <RemoveIcon aria-label="remove component" />
                       </IconButton>
                     </Stack>
                   </Stack>

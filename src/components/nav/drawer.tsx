@@ -67,13 +67,19 @@ const  MenuDrawer = ({ open, close}:Props) => {
               <StyledListItemText primary={"Products"} />
             </ListItemButton>
           </ListItem>
+          </StyledNavLink>
+          <StyledNavLink
+           to="https://github.com/constellation-protocol/constellation-protocol"
+           target='_blank'
+           rel='noopener noreferrer'
+           style={({ isActive }) => ({ 
+            color: isActive ? "white" : 'silver', 
+          })}
+           >
           <ListItem >
-          <a href="https://github.com/constellation-protocol/constellation-protocol" target="_blank" rel="noopener noreferrer">
-        <GitHubIcon sx={{ color: 'white', cursor: 'pointer' }} />
-      </a>
+               <GitHubIcon sx={{ color: 'white', cursor: 'pointer' }} />
           </ListItem>
           </StyledNavLink>
-          
       </List> 
     </Box>
   );

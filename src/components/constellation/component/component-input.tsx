@@ -12,9 +12,7 @@ const ComponentInput = () => {
   const [loading, setLoading] = useState(false);
   const { addToken, components } = useContext(CreateConstellationContext);
 
-  useEffect(() => {
-      
-  })
+  useEffect(() => {});
 
   const handleTokenInfo = async (address: string) => {
     if (
@@ -26,7 +24,7 @@ const ComponentInput = () => {
       return;
     }
     setError(false);
-    setLoading(true)
+    setLoading(true);
     const name = await getTokenName(address, sorobanContext);
     const symbol = await getTokenSymbol(address, sorobanContext);
     addToken({
@@ -36,23 +34,22 @@ const ComponentInput = () => {
       amount: 0,
       amountError: false,
     });
-    setAddress('')
-    setLoading(false)
-  }; 
+    setAddress("");
+    setLoading(false);
+  };
 
   const handleAddress = (input: string) => {
-     const _input = input.trim();
-      setAddress(_input);
-      if(_input==='') {
-        setError(false)
-      }
-     if(StrKey.isValidContract(_input)) {
-      setError(false)
-      handleTokenInfo(input)
-     } else  {
-       setError(true)
-     } 
- 
+    const _input = input.trim();
+    setAddress(_input);
+    if (_input === "") {
+      setError(false);
+    }
+    if (StrKey.isValidContract(_input)) {
+      setError(false);
+      handleTokenInfo(input);
+    } else {
+      setError(true);
+    }
   };
 
   return (
@@ -67,59 +64,62 @@ const ComponentInput = () => {
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ position: "relative", width: "100%", padding:'0' }}> 
-        <TextField
-          error={error}
-          type="text"
-          id="outlined-basic"
-          placeholder="Enter Token Address"
-          variant="outlined"
-          // required
-          value={address}
-          inputProps={{ readOnly: false }}
-          onChange={(e) => handleAddress(e.target.value)}
-          sx={{
-            borderColor:"none",
-            color: "#ffffff",
-            width: "100%",
-            borderRadius: "14px",
-             backgroundColor:'#181A28',
-            "& .MuiInputBase-root": {
-               border: "none solid",
-              height: "100%",
-              fontSize: "14px",
+        <Box sx={{ position: "relative", width: "100%", padding: "0" }}>
+          <TextField
+            error={error}
+            type="text"
+            id="outlined-basic"
+            placeholder="Enter Token Address"
+            variant="outlined"
+            // required
+            value={address}
+            inputProps={{ readOnly: false }}
+            onChange={(e) => handleAddress(e.target.value)}
+            sx={{
+              borderColor: "none",
               color: "#ffffff",
-            },
-            "& .MuiInputBase-input": {
-              color: "#ffffff",
-            },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
+              width: "100%",
+              borderRadius: "14px",
+              backgroundColor: "#181A28",
+              "& .MuiInputBase-root": {
+                border: "none solid",
+                height: "100%",
+                fontSize: "14px",
                 color: "#ffffff",
               },
-              "&.Mui-error fieldset": {
-                borderColor: error ?  "#B22222" : "none",
+              "& .MuiInputBase-input": {
+                color: "#ffffff",
               },
-            }, 
-          }}
-          InputProps={{
-            style: {
-              fontWeight: 500,
-            },
-          }}
-        />
-       { loading && <LinearProgress
-        sx={{
-          width:'100%',
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "1px", // Adjust the thickness of the progress bar
-          borderRadius: "0px 0px 14px 14px", // Match the border radius of the TextField
-        }}
-       color="secondary" />}
-     </Box> 
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  color: "#ffffff",
+                },
+                "&.Mui-error fieldset": {
+                  borderColor: error ? "#B22222" : "none",
+                },
+              },
+            }}
+            InputProps={{
+              style: {
+                fontWeight: 500,
+              },
+            }}
+          />
+          {loading && (
+            <LinearProgress
+              sx={{
+                width: "100%",
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: "1px", // Adjust the thickness of the progress bar
+                borderRadius: "0px 0px 14px 14px", // Match the border radius of the TextField
+              }}
+              color="secondary"
+            />
+          )}
+        </Box>
       </Stack>
     </>
   );

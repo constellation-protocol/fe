@@ -6,10 +6,7 @@ import {
   TokenUserBalance,
 } from "../../../types";
 import { useEffect, useState } from "react";
-import {
-  mint,
-  routerXlmGetAllowance,
-} from "../../../chain/contracts/router";
+import { mint, routerXlmGetAllowance } from "../../../chain/contracts/router";
 import { Address } from "@stellar/stellar-sdk";
 import { useSorobanReact } from "@soroban-react/core";
 import { approve } from "../../../chain/contracts/token";
@@ -28,15 +25,21 @@ interface Props {
   paymentTokens: Array<TokenUserBalance>;
   constellationTokens: Array<ConstellationUserBalance>;
   loadingConstellationTokens: boolean;
-   loadingPaymentTokens: boolean;
+  loadingPaymentTokens: boolean;
   switchView: () => void;
 }
 
-const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loadingConstellationTokens,switchView }: Props) => {
+const Mint = ({
+  paymentTokens,
+  constellationTokens,
+  loadingPaymentTokens,
+  loadingConstellationTokens,
+  switchView,
+}: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
-  const [swapStatus, setSwapStatus] = useState<SwapStatus>();//(SwapStatus.init);
+  const [swapStatus, setSwapStatus] = useState<SwapStatus>(); //(SwapStatus.init);
   const [constellationToken, setConstellationToken] =
     useState<ConstellationUserBalance>();
   const [paymentAmount, setPaymentAmount] = useState<Number | string>("");
@@ -56,12 +59,11 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
         const _allowance = await routerXlmGetAllowance(address, sorobanContext);
         setAllowance(_allowance);
         setBalance(_balance);
-        setSwapStatus(SwapStatus.completed)
-
+        setSwapStatus(SwapStatus.completed);
       }
 
-      if(!!paymentAmount && swapStatus === SwapStatus.init) {
-         _updateReceiveTokenAmount(paymentAmount);
+      if (!!paymentAmount && swapStatus === SwapStatus.init) {
+        _updateReceiveTokenAmount(paymentAmount);
       }
     };
     run();
@@ -78,12 +80,13 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
     let amount_in = getSwapFeeIncludedAmount(paymentAmount as number);
     amount_in = getScaledAmount(amount_in, decimals);
     const xlm = import.meta.env.VITE_XLM as string;
-    const constellation_router_str = import.meta.env.VITE_CONSTELLATION_ROUTER as string;
+    const constellation_router_str = import.meta.env
+      .VITE_CONSTELLATION_ROUTER as string;
     const constellation_router = Address.fromString(constellation_router_str);
     const from = Address.fromString(sorobanContext?.address as string);
-    setSwapStatus(SwapStatus.approving)
+    setSwapStatus(SwapStatus.approving);
     await approve(xlm, from, constellation_router, amount_in, sorobanContext);
-    setSwapStatus(SwapStatus.approve_completing)
+    setSwapStatus(SwapStatus.approve_completing);
   };
 
   const swap = async () => {
@@ -114,15 +117,15 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
       to: Address.fromString(to),
       deadline: timestampPlusFiveHours,
     };
-    setSwapStatus(SwapStatus.swapping)
+    setSwapStatus(SwapStatus.swapping);
     await mint(mintParams, sorobanContext);
-    setPaymentAmount(0)
-    setConstellationAmount(0)
-    setSwapStatus(SwapStatus.swap_completing)
+    setPaymentAmount(0);
+    setConstellationAmount(0);
+    setSwapStatus(SwapStatus.swap_completing);
   };
 
   const handlePaymentAmountChange = async (amount: Number | string) => {
-    setSwapStatus(SwapStatus.init)
+    setSwapStatus(SwapStatus.init);
     if (isNaN(amount as number)) {
       setConstellationAmount("");
       setPaymentAmount("");
@@ -134,28 +137,27 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
   };
 
   const handleReciveAmountChange = (amount: string | Number) => {
-    setConstellationAmount(amount)
-
-  }
+    setConstellationAmount(amount);
+  };
 
   const handleSetConstellationToken = (t: TokenUserBalance) => {
     setConstellationToken(
       constellationTokens.find((c) => c.address === t.address),
-    ); 
+    );
 
     _updateReceiveTokenAmount(paymentAmount);
   };
 
   const handleSetPaymentToken = (token: TokenUserBalance) => {
-    setPaymentToken(token );
-  }
+    setPaymentToken(token);
+  };
 
   const _updateReceiveTokenAmount = async (amount: Number | string) => {
     const token_in = paymentToken?.address.toString() as string;
     const decimals = paymentToken?.decimals as number;
     const amount_in = (amount as number) * Math.pow(10, decimals);
 
-    if(!constellationToken || !paymentToken) return;
+    if (!constellationToken || !paymentToken) return;
 
     const amountOut = await getConstellationAmount(
       amount_in,
@@ -172,27 +174,27 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
     <>
       <SwapContent switchView={switchView}>
         <TokenInfo
-        isTokenIn={true}
+          isTokenIn={true}
           amount={paymentAmount as number}
-          readOnly = {false}
+          readOnly={false}
           onAmountChange={handlePaymentAmountChange}
           selectedToken={paymentToken}
-          setSelectedToken={handleSetPaymentToken} 
-          loadingTokens = {loadingPaymentTokens}
+          setSelectedToken={handleSetPaymentToken}
+          loadingTokens={loadingPaymentTokens}
           tokens={paymentTokens}
           label="Sell"
           showSelect={true}
         />
 
         <TokenInfo
-         isTokenIn={false}
+          isTokenIn={false}
           amount={constellationAmount as number}
-          readOnly = {true}
+          readOnly={true}
           onAmountChange={handleReciveAmountChange}
           selectedToken={constellationToken}
           setSelectedToken={handleSetConstellationToken}
           tokens={constellationTokens}
-          loadingTokens = {loadingConstellationTokens}
+          loadingTokens={loadingConstellationTokens}
           label="Buy"
           showSelect={true}
         />
@@ -215,4 +217,4 @@ const Mint = ({ paymentTokens, constellationTokens,loadingPaymentTokens, loading
   );
 };
 
-export default Mint; 
+export default Mint;

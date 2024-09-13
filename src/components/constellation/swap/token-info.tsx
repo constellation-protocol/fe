@@ -34,7 +34,7 @@ const TokenInfo = ({
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <TextField 
+        <TextField
           type="number"
           value={amount}
           placeholder="0"
@@ -43,17 +43,17 @@ const TokenInfo = ({
             readOnly: readOnly,
             startAdornment: showSelect && (
               <InputAdornment position="start">
-                <Box sx={{position:'relative'}}>
+                <Box sx={{ position: "relative" }}>
                   <SelectToken
                     symbol={selectedToken?.symbol as string}
                     onClick={() => setOpenDialog(true)}
                   />
-             
+
                   <SelectTokenDialog
                     onSelectToken={setSelectedToken}
                     tokens={tokens}
                     open={openDialog}
-                    loadingTokens = {loadingTokens}
+                    loadingTokens={loadingTokens}
                     onClose={() => setOpenDialog(false)}
                   />
                 </Box>
@@ -82,7 +82,7 @@ const TokenInfo = ({
             "& .MuiInputLabel-root": {
               color: "silver", // Set the label color to white
             },
-          
+
             "& .MuiOutlinedInput-root": {
               borderRadius: "20px", // Set the border radius of the TextField
               overflow: "hidden", // Hide scroll bar
@@ -98,8 +98,8 @@ const TokenInfo = ({
               borderColor: "#4caf50 !important", // Change the border color when focused (green)
             },
             "&:not(.Mui-focused) .MuiOutlinedInput-notchedOutline": {
-              borderColor: isTokenIn ? "#B4EFAF": "black", // Ensure border color stays silver when not focused
-            }, 
+              borderColor: isTokenIn ? "#B4EFAF" : "black", // Ensure border color stays silver when not focused
+            },
             "& input[type=number]": {
               MozAppearance: "textfield", // For Firefox
             },

@@ -17,7 +17,7 @@ function App() {
     <>
       <Nav />
       <Routes>
-      <Route path="/" element={<Index />} />
+        <Route path="/" element={<Index />} />
         <Route element={<ConstellationLayout />}>
           <Route path="/create" element={<CreateTokenIndex />} />
           <Route path="/products" element={<ListToken />} />

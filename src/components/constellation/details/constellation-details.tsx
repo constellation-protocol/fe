@@ -21,18 +21,17 @@ import {
 import ComponentsList from "./components-list";
 
 const ConstellationDetails = () => {
-
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
-  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between("md", "lg")); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return '500px';
-    else if (isTablet) return '90%';
-    else if (isMobile) return '90%'
-  }
+    if (isLargeDesktop || isDesktop) return "500px";
+    else if (isTablet) return "90%";
+    else if (isMobile) return "90%";
+  };
 
   const sorobanContext = useSorobanReact();
   const [token, setToken] = useState<ConstellationToken>();
@@ -48,49 +47,50 @@ const ConstellationDetails = () => {
       );
       setToken(_token);
       setComponents(_token.components);
-      setLoading(false)
+      setLoading(false);
     };
     get();
   }, []);
 
   const content = () => {
-     if(token) {
-         return   <ComponentsList tokens={components} />
-     } else {
-        return (<>
-               <Stack spacing={1}> 
-          <Skeleton
-            sx={{
-              backgroundColor: "#181A25",
-              width: "100%",
-              borderRadius: "20px",
-            }}
-            variant="rectangular"
-            height={55}
-          />
-          <Skeleton
-            sx={{
-              backgroundColor: "#181A25",
-              width: "100%",
-              borderRadius: "20px",
-            }}
-            variant="rounded"
-            height={55}
-          />
-          <Skeleton
-            sx={{
-              backgroundColor: "#181A25",
-              width: "100%",
-              borderRadius: "20px",
-            }}
-            variant="rounded"
-            height={55}
-          />
-          
-        </Stack>
-        </>)
-     }
-  }
+    if (token) {
+      return <ComponentsList tokens={components} />;
+    } else {
+      return (
+        <>
+          <Stack spacing={1}>
+            <Skeleton
+              sx={{
+                backgroundColor: "#181A25",
+                width: "100%",
+                borderRadius: "20px",
+              }}
+              variant="rectangular"
+              height={55}
+            />
+            <Skeleton
+              sx={{
+                backgroundColor: "#181A25",
+                width: "100%",
+                borderRadius: "20px",
+              }}
+              variant="rounded"
+              height={55}
+            />
+            <Skeleton
+              sx={{
+                backgroundColor: "#181A25",
+                width: "100%",
+                borderRadius: "20px",
+              }}
+              variant="rounded"
+              height={55}
+            />
+          </Stack>
+        </>
+      );
+    }
+  };
 
   return (
     <>
@@ -115,38 +115,53 @@ const ConstellationDetails = () => {
               <ListItem>
                 <ListItemText
                   sx={{
-                
                     color: "#fff",
                     "& .MuiListItemText-primary": {
                       color: "silver",
-                      fontFamily:'NeueHaasLight',
-                      fontSize:'22px',
+                      fontFamily: "NeueHaasLight",
+                      fontSize: "22px",
                     },
                     "& .MuiListItemText-secondary": {
                       color: "#fff",
-                      fontFamily:'NeueHaasLight',
-                      fontSize:'16px',
+                      fontFamily: "NeueHaasLight",
+                      fontSize: "16px",
                     },
                   }}
-                  primary={loading ? 'Loading Asset Details': (!token ? "Asset Details Not Found" : token.symbol)}
+                  primary={
+                    loading
+                      ? "Loading Asset Details"
+                      : !token
+                        ? "Asset Details Not Found"
+                        : token.symbol
+                  }
                   secondary={token?.name}
                 />
               </ListItem>
             </List>
           }
         ></CardHeader>
-        <CardContent>
-           {content()}
-        </CardContent>
+        <CardContent>{content()}</CardContent>
         <CardActions sx={{ padding: "0 25px" }}>
-          <Stack direction={"row"} sx={{gap:'10px'}}>
-          <Link to="/products" style={{ textDecoration: "none", color:'#B4EFAF' }}>
-            <Typography sx={{fontFamily:'NeueHaasLight'}}> Products</Typography>
-          </Link>
-          <Typography sx={{color:'silver'}}>|</Typography>
-          <Link to="/swap" style={{ textDecoration: "none", color:'#B4EFAF' }}>
-            <Typography sx={{fontFamily:'NeueHaasLight'}}> Swap</Typography>
-          </Link>
+          <Stack direction={"row"} sx={{ gap: "10px" }}>
+            <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "#B4EFAF" }}
+            >
+              <Typography sx={{ fontFamily: "NeueHaasLight" }}>
+                {" "}
+                Products
+              </Typography>
+            </Link>
+            <Typography sx={{ color: "silver" }}>|</Typography>
+            <Link
+              to="/swap"
+              style={{ textDecoration: "none", color: "#B4EFAF" }}
+            >
+              <Typography sx={{ fontFamily: "NeueHaasLight" }}>
+                {" "}
+                Swap
+              </Typography>
+            </Link>
           </Stack>
         </CardActions>
       </Card>

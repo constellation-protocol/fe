@@ -12,12 +12,11 @@ const CreateConstellationContextProvider = ({
 
   const removeToken = (index: number) => {
     components.splice(index, 1);
- 
+
     setTokens([...components]);
   };
 
   const addToken = (token: FormComponent) => {
- 
     setTokens([...components, token]);
     // }
   };

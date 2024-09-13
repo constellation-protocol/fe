@@ -28,7 +28,13 @@ interface Props {
   switchView: () => void;
 }
 
-const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,loadingPaymentTokens, switchView }: Props) => {
+const Redeem = ({
+  paymentTokens,
+  constellationTokens,
+  loadingConstellationTokens,
+  loadingPaymentTokens,
+  switchView,
+}: Props) => {
   const sorobanContext = useSorobanReact();
   const { address } = sorobanContext;
   const [paymentToken, setPaymentToken] = useState<TokenUserBalance>();
@@ -49,25 +55,25 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
       if (address) {
         setAccountAddress(address);
         if (constellationToken) {
-         const _balance = await getBalanceOf(
+          const _balance = await getBalanceOf(
             address,
             constellationToken.address.toString(),
             sorobanContext,
           );
 
           setBalance(_balance);
-          const  _allowance = await routerGetAllowance(
-             address,
-             constellationToken.address.toString(),
-             sorobanContext,
-           );
-           setAllowance(_allowance);
-           setSwapStatus(SwapStatus.completed)
+          const _allowance = await routerGetAllowance(
+            address,
+            constellationToken.address.toString(),
+            sorobanContext,
+          );
+          setAllowance(_allowance);
+          setSwapStatus(SwapStatus.completed);
         }
       }
 
-      if(!!constellationAmount && swapStatus === SwapStatus.init) {
-         _updateReceiveTokenAmount(constellationAmount);
+      if (!!constellationAmount && swapStatus === SwapStatus.init) {
+        _updateReceiveTokenAmount(constellationAmount);
       }
     };
     run();
@@ -80,25 +86,24 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
   ]);
 
   const approveTx = async () => {
-    if(!constellationToken ) return
+    if (!constellationToken) return;
     const decimals = constellationToken?.decimals as number;
     let amount_in = getSwapFeeIncludedAmount(constellationAmount as number);
     amount_in = getScaledAmount(amount_in, decimals);
-    const constellation_router_str = import.meta.env.VITE_CONSTELLATION_ROUTER as string;
+    const constellation_router_str = import.meta.env
+      .VITE_CONSTELLATION_ROUTER as string;
     const constellation_router = Address.fromString(constellation_router_str);
     const from = Address.fromString(accountAddress);
-    setSwapStatus(SwapStatus.approving)
-     await approve(
+    setSwapStatus(SwapStatus.approving);
+    await approve(
       constellationToken.address.toString(),
       from,
       constellation_router,
       amount_in,
       sorobanContext,
     );
-    setSwapStatus(SwapStatus.approve_completing)
-
+    setSwapStatus(SwapStatus.approve_completing);
   };
-
 
   const handleSetConstellationToken = (t: TokenUserBalance) => {
     setConstellationToken(
@@ -107,21 +112,20 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
   };
 
   const handleAmountChange = async (amount: Number | string) => {
-
     if (isNaN(amount as number)) {
       setConstellationAmount("");
       setPaymentAmount("");
       return;
     }
 
-    setConstellationAmount(amount); 
+    setConstellationAmount(amount);
     _updateReceiveTokenAmount(amount);
-    setSwapStatus(SwapStatus.init)
+    setSwapStatus(SwapStatus.init);
   };
 
   const _updateReceiveTokenAmount = async (amount: Number | string) => {
-    if(!constellationToken || !paymentToken) return;
-    
+    if (!constellationToken || !paymentToken) return;
+
     const { address: xlm_address, decimals: xlm_decimals } = paymentToken;
 
     const xlmAmount = await getXlmAmount(
@@ -139,34 +143,37 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
     if (!sorobanContext.address) {
       return;
     }
-    if(!paymentToken || !constellationToken) return;
+    if (!paymentToken || !constellationToken) return;
     // Get the current Unix timestamp in seconds
     const currentTimestamp = Math.floor(Date.now() / 1000);
     // Add 5 hours (5 * 60 * 60 seconds)
     const deadline = currentTimestamp + 5 * 60 * 60;
-    const amount = getScaledAmount(constellationAmount as number, paymentToken?.decimals as number);
+    const amount = getScaledAmount(
+      constellationAmount as number,
+      paymentToken?.decimals as number,
+    );
     const params: RedeemParams = {
       to: Address.fromString(accountAddress),
       amount,
       constellation_token: constellationToken?.address as Address,
       redeem_token: Address.fromString(paymentToken.address.toString()),
-       deadline,
+      deadline,
     };
-     setSwapStatus(SwapStatus.swapping)
-     await redeem(params, sorobanContext);
-    setPaymentAmount(0)
-    setConstellationAmount(0)
-    setSwapStatus(SwapStatus.swap_completing)
+    setSwapStatus(SwapStatus.swapping);
+    await redeem(params, sorobanContext);
+    setPaymentAmount(0);
+    setConstellationAmount(0);
+    setSwapStatus(SwapStatus.swap_completing);
   };
 
   return (
     <>
       <SwapContent switchView={switchView}>
         <TokenInfo
-        isTokenIn = {true}
+          isTokenIn={true}
           amount={constellationAmount as number}
-          readOnly = {false}
-          loadingTokens = {loadingConstellationTokens}
+          readOnly={false}
+          loadingTokens={loadingConstellationTokens}
           onAmountChange={handleAmountChange}
           selectedToken={constellationToken}
           setSelectedToken={handleSetConstellationToken}
@@ -175,14 +182,14 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
           showSelect={true}
         />
         <TokenInfo
-        isTokenIn = {false}
+          isTokenIn={false}
           amount={paymentAmount as number}
-          readOnly = {true}
+          readOnly={true}
           onAmountChange={setPaymentAmount}
           selectedToken={paymentToken}
           setSelectedToken={setPaymentToken}
           tokens={paymentTokens}
-          loadingTokens = {loadingPaymentTokens}
+          loadingTokens={loadingPaymentTokens}
           label="Buy"
           showSelect={true}
         />
@@ -196,7 +203,7 @@ const Redeem = ({ paymentTokens, constellationTokens,loadingConstellationTokens,
           allowance={allowance}
           inputTokenSelected={!!paymentToken}
           outputTokenSelected={!!constellationToken}
-          swapStatus = {swapStatus as SwapStatus}
+          swapStatus={swapStatus as SwapStatus}
           swap={swap}
           approve={approveTx}
         />

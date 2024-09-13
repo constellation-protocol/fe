@@ -19,18 +19,18 @@ export interface Props {
   onClose: () => void;
 }
 
-const ComponentForm = ({ open,  }: Props) => {
+const ComponentForm = ({ open }: Props) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
-  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md")); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between("md", "lg")); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg")); // min-width: 1200px
 
   const getMainCardWidth = () => {
-    if (isLargeDesktop || isDesktop) return '500px';
-    else if (isTablet) return '60%';
-    else if (isMobile) return '90%'
-  }
+    if (isLargeDesktop || isDesktop) return "500px";
+    else if (isTablet) return "60%";
+    else if (isMobile) return "90%";
+  };
 
   const { components, setOpenComponentForm, setError } = useContext(
     CreateConstellationContext,
@@ -53,14 +53,14 @@ const ComponentForm = ({ open,  }: Props) => {
   return (
     <Dialog
       fullWidth
-       open={open}
+      open={open}
       sx={{
         "& .MuiDialog-paper": {
           color: "silver",
           width: getMainCardWidth(),
           border: "1px solid",
           borderColor: "#824f87",
-          borderRadius: "25px", 
+          borderRadius: "25px",
         },
       }}
     >
@@ -74,12 +74,14 @@ const ComponentForm = ({ open,  }: Props) => {
           alignItems: "center", // Center vertically
         }}
       >
-       <Typography> Add Components to your Asset</Typography>
+        <Typography> Add Components to your Asset</Typography>
       </DialogTitle>
       <Box sx={{ backgroundColor: "#13141E", padding: "0px 20px" }}>
         <ComponentInput />
       </Box>
-      <DialogContent sx={{padding:'0 20px', height: "40vh", backgroundColor: "#13141E" }}>
+      <DialogContent
+        sx={{ padding: "0 20px", height: "40vh", backgroundColor: "#13141E" }}
+      >
         <Box sx={{ padding: "5px 0px" }}>
           <ComponentItemsList />
         </Box>
@@ -90,13 +92,10 @@ const ComponentForm = ({ open,  }: Props) => {
           justifyContent: "center",
           alignContent: "center",
           backgroundColor: "#16181b",
-          padding:'0px 20px 20px'
+          padding: "0px 20px 20px",
         }}
       >
-        <FormButton
-          text={'Add Components'}
-          onClick={handleConfirm}
-        /> 
+        <FormButton text={"Add Components"} onClick={handleConfirm} />
       </DialogActions>
     </Dialog>
   );

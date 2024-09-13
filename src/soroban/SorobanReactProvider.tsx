@@ -9,7 +9,7 @@ import useMounted from "../hooks/useMounted";
 
 const chains: ChainMetadata[] = [standalone, testnet, mainnet];
 
-const activeChain: WalletChain = testnet; 
+const activeChain: WalletChain = testnet;
 
 export const walletConnectors: Connector[] = [
   freighter(),

@@ -22,7 +22,7 @@ interface CustomButtonProps {
   onClick: () => void;
 }
 
-const StyledBox = styled(Box)(({   }) => ({
+const StyledBox = styled(Box)(({}) => ({
   backgroundColor: "#212637",
   width: "100%",
   padding: "18px 20px",
@@ -32,13 +32,13 @@ const StyledBox = styled(Box)(({   }) => ({
   justifyContent: "center",
 }));
 
-const StyledText = styled(Typography)(({   }) => ({
+const StyledText = styled(Typography)(({}) => ({
   color: "#878891",
   fontSize: "18px",
-  fontWeight: "bold",  
+  fontWeight: "bold",
 }));
 
-const StyledButton = styled(Button)(({   }) => ({
+const StyledButton = styled(Button)(({}) => ({
   padding: "0px",
   margin: "0 auto",
   backgroundColor: "rgb(136, 102, 221)",
@@ -69,7 +69,7 @@ const Info = ({ text }: InfoProps) => (
 
 const CustomButton = ({ text, onClick }: CustomButtonProps) => (
   <StyledButton fullWidth onClick={onClick}>
-    <Typography sx={{ color: "white",  }}>{text}</Typography>
+    <Typography sx={{ color: "white" }}>{text}</Typography>
   </StyledButton>
 );
 
@@ -84,14 +84,22 @@ const SwapAction = ({
   swap,
   approve,
 }: Props) => {
-
-  if (!address)return <Info text="Connect Wallet"/>
-  if (!inputTokenSelected) return <Info text="Select Input Token"/>
-  if (!outputTokenSelected)return <Info text="Select Output Token"/>;
-  if(swapStatus === SwapStatus.swapping || swapStatus === SwapStatus.swap_completing) return <Info text="Swapping" />
-  if(swapStatus === SwapStatus.approving || swapStatus === SwapStatus.approve_completing) return <Info text="Approving" />
-  if (balance === 0 || paymentAmount > balance) return <Info text="Insufficient Balance"/>;
-  if (paymentAmount === 0) return <Info text="Enter amount"/>;
+  if (!address) return <Info text="Connect Wallet" />;
+  if (!inputTokenSelected) return <Info text="Select Input Token" />;
+  if (!outputTokenSelected) return <Info text="Select Output Token" />;
+  if (
+    swapStatus === SwapStatus.swapping ||
+    swapStatus === SwapStatus.swap_completing
+  )
+    return <Info text="Swapping" />;
+  if (
+    swapStatus === SwapStatus.approving ||
+    swapStatus === SwapStatus.approve_completing
+  )
+    return <Info text="Approving" />;
+  if (balance === 0 || paymentAmount > balance)
+    return <Info text="Insufficient Balance" />;
+  if (paymentAmount === 0) return <Info text="Enter amount" />;
   if (paymentAmount > allowance) {
     return <CustomButton text="Approve" onClick={approve} />;
   } else if (paymentAmount <= allowance) {
