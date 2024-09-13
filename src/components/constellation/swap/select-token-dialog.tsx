@@ -8,7 +8,9 @@ import {
   ListItemButton,
   ListItemText,
   Skeleton,
-  Stack
+  Stack,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import { TokenUserBalance } from "../../../types";
 import { formatNumber } from "../../../utils";
@@ -21,6 +23,18 @@ interface Props {
   onClose: () => void;
 }
 const SelectTokenDialog = ({ open, tokens, loadingTokens, onClose, onSelectToken }: Props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '50%';
+    else if (isMobile) return '70%'
+  }
+
   const handleSelectToken = (token: TokenUserBalance) => {
     onSelectToken(token);
     onClose();
@@ -112,9 +126,7 @@ const borderRadius = '15px';
         onClose={() => onClose()}
         open={open} 
         PaperProps={{
-          style: { position: 'absolute', top:250}, // Adjust the position manually
-          //style: { margin:'0 auto '},
-          
+          style: { position: 'absolute', top:250}, // Adjust the position manually          
           sx: {
             '& .MuiDialog-paper': {
               margin: '0 auto', // Reset margins
@@ -124,12 +136,11 @@ const borderRadius = '15px';
             backgroundColor: "#13141E",
             borderRadius: "15px",
             padding: 0,
-            width: "25%",
+            width: getMainCardWidth(),
             border: "2px solid #291c44",
             "@media (min-width: 1440px)": {
               width: "450px", // Set the width to 500px on wide screens (like desktop monitors)
-            },
-            
+            }, 
           },
         }}
       >

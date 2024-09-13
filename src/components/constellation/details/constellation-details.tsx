@@ -15,10 +15,25 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ComponentsList from "./components-list";
 
 const ConstellationDetails = () => {
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '90%';
+    else if (isMobile) return '90%'
+  }
+
   const sorobanContext = useSorobanReact();
   const [token, setToken] = useState<ConstellationToken>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -81,7 +96,7 @@ const ConstellationDetails = () => {
     <>
       <Card
         sx={{
-          width: "40%",
+          width: getMainCardWidth(),
           border: "2px solid",
           borderColor: "#824f87",
           borderRadius: "25px",

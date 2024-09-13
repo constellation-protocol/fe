@@ -2,6 +2,8 @@ import {
   Card,
   CardContent,
   CardHeader,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Mint from "./mint";
@@ -15,12 +17,25 @@ import {
   getUserConstellationDetails,
 } from "../../../chain/contracts/constellation_token";
 
+
  
 enum View {
   mint,
   redeem,
 }
 const Swap = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '60%';
+    else if (isMobile) return '90%'
+  }
+
   const [view, setView] = useState<View>(View.mint);
 
   const [constellationTokens, setConstellationTokens] = useState<
@@ -82,7 +97,7 @@ const Swap = () => {
     <>
       <Card
         sx={{
-          width: "40%",
+          width: getMainCardWidth(),
           border: "2px solid",
           borderColor: "#824f87",
           borderRadius: "25px",
@@ -90,9 +105,6 @@ const Swap = () => {
           color: "silver",
           margin: "0 auto",
           paddingBottom: "20px",
-          "@media (min-width: 1440px)": {
-        width: "500px", // Set the width to 500px on wide screens (like desktop monitors)
-      },
         }}
       >
         <CardHeader sx={{textAlign:'center', fontFamily:'NeueHaasLight'}} title="Swap"></CardHeader>

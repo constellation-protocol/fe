@@ -17,12 +17,26 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { ConstellationToken } from "../../../types";
 import { formatAddress } from "../../../utils";
 import { Link } from "react-router-dom";
 
 const ListToken = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '90%';
+    else if (isMobile) return '90%'
+  }
+
   const sorobanContext = useSorobanReact();
   const [tokens, setTokens] = useState<Array<ConstellationToken>>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -81,7 +95,7 @@ const ListToken = () => {
                   <TableRow>
                     <TableCell><Typography sx={{fontFamily:'NeueHaasLight'}}>{token.symbol}</Typography></TableCell>
                     <TableCell aria-describedby={id} >
-                      <Typography sx={{fontFamily:'NeueHaasLight'}} onClick={(e)=>handleClick(e,token.address.toString())} >{formatAddress(token.address.toString())}</Typography> 
+                      <Typography sx={{fontFamily:'NeueHaasLight', color:'#B4EFAF', cursor:'pointer' }} onClick={(e)=>handleClick(e,token.address.toString())} >{formatAddress(token.address.toString())}</Typography> 
                     </TableCell>
                     <TableCell></TableCell>
                     <TableCell>
@@ -163,15 +177,12 @@ const ListToken = () => {
     <>
       <Card
         sx={{
-          width: "45%",
+          width: getMainCardWidth(),
           backgroundColor: "#13141E",
           borderRadius: "25px",
           border: "1px solid #824f87",
           minHeight: "65%",
           paddingBottom: "20px",
-          "@media (min-width: 1440px)": {
-        width: "700px",  
-      },
         }}
       >
         <CardHeader

@@ -7,6 +7,8 @@ import {
   Chip,
   IconButton,
   CardActions,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
@@ -18,6 +20,18 @@ import { createToken } from "../../../chain/contracts/router";
 import CreateAction from "./create-action";
 
 const CreateToken = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '60%';
+    else if (isMobile) return '90%'
+  }
+
   const sorobanContext = useSorobanReact();
   const [, setAddress] = useState<string>('')
   const { address } =  sorobanContext;
@@ -63,12 +77,8 @@ const CreateToken = () => {
           borderRadius: "30px",
           backgroundColor: "#13141E",
           color: "silver",
-          width: "35%",
-          // margin: "100px auto",
+          width: getMainCardWidth(),
           paddingBottom: "20px",
-          "@media (min-width: 1440px)": {
-        width: "500px", // Set the width to 500px on wide screens (like desktop monitors)
-      },
         }}
       >
         <CardHeader sx={{textAlign:'center'}} title="Create Asset"></CardHeader>
@@ -196,7 +206,6 @@ const CreateToken = () => {
                 type="text"
                 id="outlined-basic"
                 placeholder="Asset manager wallet address"
-                // label="Manager Address"
                 variant="outlined"
                 value={manager}
                 inputProps={{ readOnly: false }}

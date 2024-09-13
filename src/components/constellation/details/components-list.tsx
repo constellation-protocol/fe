@@ -85,7 +85,7 @@ const ComponentsList = ({ tokens }: Props) => {
                     <TableRow>
                       <TableCell><Typography sx={{fontFamily:'NeueHaasLight'}}>{token.symbol}</Typography></TableCell>
                       <TableCell>
-                        <Typography sx={{fontFamily:'NeueHaasLight'}} onClick={(e)=>handleClick(e,token.address.toString())}>{formatAddress(token.address.toString())}</Typography>
+                        <Typography sx={{fontFamily:'NeueHaasLight', color:'#B4EFAF', cursor:'pointer' }} onClick={(e)=>handleClick(e,token.address.toString())}>{formatAddress(token.address.toString())}</Typography>
                       </TableCell>
                     </TableRow>
                   </React.Fragment>

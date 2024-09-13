@@ -5,6 +5,8 @@ import {
   DialogContent,
   DialogActions,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import ComponentInput from "./component-input";
 import ComponentItemsList from "./component-items-list";
@@ -18,6 +20,18 @@ export interface Props {
 }
 
 const ComponentForm = ({ open,  }: Props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));  // max-width: 599.95px
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md')); // min-width: 600px and max-width: 899.95px
+  const isDesktop = useMediaQuery(theme.breakpoints.between('md', 'lg')); // min-width: 900px and max-width: 1199.95px
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg')); // min-width: 1200px
+
+  const getMainCardWidth = () => {
+    if (isLargeDesktop || isDesktop) return '500px';
+    else if (isTablet) return '60%';
+    else if (isMobile) return '90%'
+  }
+
   const { components, setOpenComponentForm, setError } = useContext(
     CreateConstellationContext,
   );
@@ -43,14 +57,10 @@ const ComponentForm = ({ open,  }: Props) => {
       sx={{
         "& .MuiDialog-paper": {
           color: "silver",
-          width: "35%",
-          maxWidth: "80%",
+          width: getMainCardWidth(),
           border: "1px solid",
           borderColor: "#824f87",
-          borderRadius: "25px",
-          "@media (min-width: 1440px)": {
-            width: "600px", // Set the width to 500px on wide screens (like desktop monitors)
-          },
+          borderRadius: "25px", 
         },
       }}
     >
