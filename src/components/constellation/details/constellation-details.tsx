@@ -139,9 +139,15 @@ const ConstellationDetails = () => {
            {content()}
         </CardContent>
         <CardActions sx={{ padding: "0 25px" }}>
+          <Stack direction={"row"} sx={{gap:'10px'}}>
+          <Link to="/products" style={{ textDecoration: "none", color:'#B4EFAF' }}>
+            <Typography sx={{fontFamily:'NeueHaasLight'}}> Products</Typography>
+          </Link>
+          <Typography sx={{color:'silver'}}>|</Typography>
           <Link to="/swap" style={{ textDecoration: "none", color:'#B4EFAF' }}>
             <Typography sx={{fontFamily:'NeueHaasLight'}}> Swap</Typography>
           </Link>
+          </Stack>
         </CardActions>
       </Card>
     </>
